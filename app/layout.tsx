@@ -1,5 +1,5 @@
-import { Toaster } from '@/components/ui/sonner';
-import type { Metadata } from 'next';
+import Providers from '@/context/providers';
+import { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     'Record health care app for evidence about medical examinations, medicines, vacciations',
 };
 
-const RootLayout = ({
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -27,10 +27,7 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-100 antialiased`}>
-        <main>
-          {children}
-          <Toaster />
-        </main>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
