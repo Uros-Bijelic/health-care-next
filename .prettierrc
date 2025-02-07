@@ -1,0 +1,7 @@
+{
+  "singleQuote": true,
+  "parser": "typescript",
+  "avoidEscape": true,
+  "trailingComma": "es5",
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
