@@ -1,5 +1,11 @@
+import Image from 'next/image';
+
 const Home = () => {
-  return <h1>Health Care App</h1>;
+  return (
+    <h1>
+      <Image alt="nesto" src="//https/bla.com" />
+    </h1>
+  );
 };
 
 export default Home;
