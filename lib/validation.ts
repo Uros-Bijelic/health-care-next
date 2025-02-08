@@ -8,6 +8,7 @@ export const registerFormSchema = z.object({
   email: z.string().trim().email('Please enter valid email address'),
   password: z.string().trim().min(6, 'Password must be at least 6 characters'),
   userName: z.string().trim().min(1, 'Name is required'),
+  role: z.enum(['doctor', 'user']),
 });
 
 export type IRegisterFormSchema = z.infer<typeof registerFormSchema>;
