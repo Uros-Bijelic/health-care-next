@@ -1,12 +1,7 @@
-import { Button } from '@/components/ui/button';
-
 const Home = () => {
   return (
-    <div>
+    <div className="mt-2 h-full min-h-full border-2 border-red-400 bg-cyan-400 p-5 px-3 py-2">
       <h1>This is new Tittle app for testing commitlint </h1>
-      <div className="p-4 pt-2">
-        <Button variant="destructive">This is shdcn button</Button>
-      </div>
     </div>
   );
 };
