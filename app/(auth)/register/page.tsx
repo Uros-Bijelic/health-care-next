@@ -11,9 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 // ----------------------------------------------------------------
 
-interface IRegisterProps {}
-
-const Register: React.FC<IRegisterProps> = () => {
+const Register: React.FC = () => {
   const methods = useForm<IRegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -24,7 +22,10 @@ const Register: React.FC<IRegisterProps> = () => {
     },
   });
 
-  const { handleSubmit, watch } = methods;
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
 
   const onSubmit = async (data: IRegisterFormSchema) => {
     console.log('data u onSubmit', data);
@@ -44,7 +45,9 @@ const Register: React.FC<IRegisterProps> = () => {
             label="Role"
             placeholder="Choose your role"
           />
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Processing...' : 'Sign Up'}
+          </Button>
         </form>
         <div className="flex flex-col gap-2 text-center ">
           <p className="p2-medium text-center w-full">

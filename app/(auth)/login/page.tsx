@@ -9,9 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 // ----------------------------------------------------------------
 
-interface ILoginProps {}
-
-const Login: React.FC<ILoginProps> = () => {
+const Login: React.FC = () => {
   const methods = useForm({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -22,7 +20,7 @@ const Login: React.FC<ILoginProps> = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = (data: ILoginFormSchema) => {
