@@ -1,7 +1,13 @@
+import { Button } from '@/components/ui/button';
+
 interface IRegisterProps {}
 
 const Register = () => {
-  return <div>Register</div>;
+  return (
+    <div>
+      <Button>dsaadssa</Button>
+    </div>
+  );
 };
 
 export default Register;

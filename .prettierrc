@@ -1,8 +1,7 @@
 {
+  "printWidth": 100,
   "singleQuote": true,
-  "parser": "typescript",
-  "avoidEscape": true,
+  "jsxSingleQuote": false,
   "trailingComma": "es5",
-  "tabWidth": 2,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "tabWidth": 2
 }

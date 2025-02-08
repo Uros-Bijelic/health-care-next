@@ -25,9 +25,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-100 antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-100 antialiased`}>
         {children}
       </body>
     </html>

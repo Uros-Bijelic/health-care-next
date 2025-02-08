@@ -1,6 +1,6 @@
 interface ILoginProps {}
 
-const Login = () => {
+const Login: React.FC<ILoginProps> = () => {
   return <div>Login</div>;
 };
 
