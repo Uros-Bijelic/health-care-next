@@ -38,7 +38,7 @@ class FirestoreClass implements IFirestoreClass {
   }
 }
 
-export const firebaseApp = new FirestoreClass();
+export const firebaseInstnace = new FirestoreClass();
 
 // Initialize Firebase
 // export const app = initializeApp(firebaseConfig);

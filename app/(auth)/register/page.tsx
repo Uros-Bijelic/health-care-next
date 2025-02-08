@@ -32,7 +32,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3 shadow-xl bg-white w-[min(400px,100%)] p-2 sm:p-5">
+    <div className="flex w-[min(400px,100%)] flex-col gap-3 bg-white p-2 shadow-xl sm:p-5">
       <h2 className="h2-bold text-center">Sign Up</h2>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
@@ -49,8 +49,8 @@ const Register: React.FC = () => {
             {isSubmitting ? 'Processing...' : 'Sign Up'}
           </Button>
         </form>
-        <div className="flex flex-col gap-2 text-center ">
-          <p className="p2-medium text-center w-full">
+        <div className="flex flex-col gap-2 text-center">
+          <p className="p2-medium w-full text-center">
             Or if you do have an account Sign In instead
           </p>
           <Link href="/login" className="text-blue-500 underline">

@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
+
 interface ILayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const Layout: React.FC<ILayoutProps> = ({ children }) => {
-  return <section className="h-screen flex-center">{children}</section>;
+const Layout = ({ children }: ILayoutProps) => {
+  return <section className="flex-center h-screen">{children}</section>;
 };
 
 export default Layout;
