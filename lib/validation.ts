@@ -10,11 +10,11 @@ export const registerFormSchema = z.object({
   userName: z.string().trim().min(1, 'Name is required'),
 });
 
-export type IRegisterForm = z.infer<typeof registerFormSchema>;
+export type IRegisterFormSchema = z.infer<typeof registerFormSchema>;
 
 export const loginFormSchema = z.object({
   email: z.string().trim().email('Please enter valid email address'),
   password: z.string().trim().min(6, 'Password must be at least 6 characters'),
 });
 
-export type ILoginForm = z.infer<typeof loginFormSchema>;
+export type ILoginFormSchema = z.infer<typeof loginFormSchema>;
