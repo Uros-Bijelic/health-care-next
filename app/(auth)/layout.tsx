@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-interface ILayoutProps {
+type LayoutProps = {
   children: ReactNode;
-}
+};
 
-const Layout = ({ children }: ILayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return <section className="flex-center h-screen">{children}</section>;
 };
 
