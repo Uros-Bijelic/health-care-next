@@ -4,7 +4,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = async ({ children }: LayoutProps) => {
   return <section className="flex-center h-screen">{children}</section>;
 };
 
