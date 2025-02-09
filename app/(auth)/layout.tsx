@@ -4,7 +4,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout = ({ children }: LayoutProps) => {
   return <section className="flex-center h-screen">{children}</section>;
 };
 
