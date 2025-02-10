@@ -3,6 +3,8 @@ import { initializeApp } from 'firebase/app';
 import { Auth, getAuth } from 'firebase/auth';
 import { Firestore, getFirestore } from 'firebase/firestore';
 
+// ----------------------------------------------------------------
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -40,4 +42,4 @@ export class FirestoreClass implements IFirestoreClass {
   }
 }
 
-export const firebase = new FirestoreClass();
+export const firebaseInit = new FirestoreClass();
