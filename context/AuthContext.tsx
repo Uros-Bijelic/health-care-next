@@ -1,6 +1,6 @@
 'use client';
 
-import { firebaseInit } from '@/lib/firebase';
+import { firebaseInstance } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
@@ -17,7 +17,7 @@ type AuthContextProviderProps = {
 };
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const auth = firebaseInit.getAuth();
+  const auth = firebaseInstance.getAuth();
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {

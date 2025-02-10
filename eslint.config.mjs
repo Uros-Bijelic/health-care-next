@@ -20,7 +20,7 @@ const eslintConfig = [
           singleQuote: true,
           parser: 'typescript',
           avoidEscape: true,
-          trailingComma: 'es5',
+          trailingComma: 'all',
         },
       ],
       quotes: ['error', 'single', { avoidEscape: true }],

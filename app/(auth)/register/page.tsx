@@ -3,15 +3,19 @@
 import { Button } from '@/components/ui/button';
 import RHFInput from '@/components/ui/RHFInputs/RHFInput';
 import RHFSelect from '@/components/ui/RHFInputs/RHFSelect';
+import { toast } from '@/hooks/use-toast';
 import { USER_APP_ROLES } from '@/lib/constants';
+import { useRegisterUser } from '@/lib/hooks/mutations/use-register-user';
 import { IRegisterFormSchema, registerFormSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 
 // ----------------------------------------------------------------
 
 const Register: React.FC = () => {
+  const router = useRouter();
   const methods = useForm<IRegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -22,6 +26,9 @@ const Register: React.FC = () => {
     },
   });
 
+  const { data, error, mutateAsync: registerUserAsync } = useRegisterUser();
+  console.log('data u register', data);
+
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -29,11 +36,31 @@ const Register: React.FC = () => {
 
   const onSubmit = async (data: IRegisterFormSchema) => {
     console.log('data u onSubmit', data);
+    const { email, password, role, userName } = data;
+
+    try {
+      const response = await registerUserAsync(
+        { password, userName, email, role },
+        {
+          onSuccess() {
+            toast({
+              title: 'You have registered successfully',
+              variant: 'default',
+            });
+            router.push('/');
+          },
+        },
+      );
+      console.log('received response', response);
+    } catch (error) {
+      console.log('Error registering new user in Register page.tsx', error);
+    }
   };
 
   return (
     <div className="flex w-[min(400px,100%)] flex-col gap-3 bg-white p-2 shadow-xl sm:p-5">
       <h2 className="h2-bold text-center">Sign Up</h2>
+      {error && <p className="p1-medium text-center text-red-500">{error.message}</p>}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
           <RHFInput name="userName" type="text" label="Your Username" placeholder="UserName" />
