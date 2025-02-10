@@ -1,44 +1,62 @@
 'use client';
 
 import { firebaseInstance } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 // ----------------------------------------------------------------
 
 type AuthContextProps = {
-  isAuth: boolean;
+  user: User | null;
+  signOutUser: () => void;
 };
 
-const AuthContext = createContext<AuthContextProps>({ isAuth: false });
+// https://stackoverflow.com/questions/78333331/how-to-use-tanstack-query-in-sync-with-firebase-firestore-to-leverage-the-featur
+const AuthContext = createContext<AuthContextProps>({ user: null, signOutUser: () => {} });
 
 type AuthContextProviderProps = {
   children: ReactNode;
 };
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+  const router = useRouter();
   const auth = firebaseInstance.getAuth();
-  const [isAuth, setIsAuth] = useState(false);
+
+  const [user, setUser] = useState<User | null>(null);
+
+  const signOutUser = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (error) {
+      console.log('Error signing out user: ', error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setIsAuth(true);
+        console.log('IMA USERA');
+        setUser(currentUser);
       } else {
-        setIsAuth(false);
+        console.log('NEMA USERA');
+        setUser(null);
       }
 
       return () => unsubscribe();
     });
   }, [auth]);
 
-  return <AuthContext.Provider value={{ isAuth }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, signOutUser }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => {
   const authContext = useContext(AuthContext);
 
   if (!authContext) throw new Error('useAuthContext must be used within AuthContextProvider');
+
+  return authContext;
 };
 
 export default AuthContextProvider;

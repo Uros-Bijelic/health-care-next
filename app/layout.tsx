@@ -29,12 +29,10 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-100 antialiased`}>
-        <main>
-          <Toaster />
-          <AuthContextProvider>
-            <QueryClientProvider>{children}</QueryClientProvider>
-          </AuthContextProvider>
-        </main>
+        <Toaster />
+        <AuthContextProvider>
+          <QueryClientProvider>{children}</QueryClientProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );
