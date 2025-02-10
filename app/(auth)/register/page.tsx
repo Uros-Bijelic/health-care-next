@@ -26,8 +26,7 @@ const Register: React.FC = () => {
     },
   });
 
-  const { data, error, mutateAsync: registerUserAsync } = useRegisterUser();
-  console.log('data u register', data);
+  const { error, mutateAsync: registerUserAsync } = useRegisterUser();
 
   const {
     handleSubmit,
@@ -35,7 +34,6 @@ const Register: React.FC = () => {
   } = methods;
 
   const onSubmit = async (data: IRegisterFormSchema) => {
-    console.log('data u onSubmit', data);
     const { email, password, role, userName } = data;
 
     try {
