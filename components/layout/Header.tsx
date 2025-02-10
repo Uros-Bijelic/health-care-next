@@ -4,6 +4,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 // import LoadingSpinner from '../ui/LoadingSpinner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { NAVIGATION_OPTIONS } from '@/lib/constants';
+import MenuIcon from '../icons/Menu';
 
 // ----------------------------------------------------------------
 
@@ -31,45 +41,29 @@ const Header: React.FC = () => {
         <div className="flex-center size-[36px] rounded-full bg-cyan-500 text-white">UB</div>
         {/* <p className="p3-medium">{data?.userName}</p> */}
         <p className="p3-medium">Uros Bijelic</p>
-        <div className="flex-center sm:hidden">
-          {/* <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <button className="bg-white" aria-label="Customise options">
-                <MenuIcon className="text-cyan-500" />
-              </button>
-            </DropdownMenu.Trigger>
-
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content
-                className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex min-w-[220px] flex-col gap-1 rounded-md bg-gray-100 p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
-                align="end"
-                sideOffset={15}
-                onCloseAutoFocus={(e) => e.preventDefault()}
-              >
-                {NAVIGATION_OPTIONS.map(({ href, icon, label }) => {
-                  const Icon = icon;
-                  return (
-                    <DropdownMenu.Item
-                      key={href}
-                      className="relative flex h-[25px] cursor-pointer select-none items-center rounded-[3px] pl-2 pr-[5px] text-[13px] leading-none outline-none transition hover:translate-x-2 data-[disabled]:pointer-events-none data-[highlighted]:bg-cyan-500 data-[disabled]:text-gray-500 data-[highlighted]:text-white"
-                    >
-                      <NavLink to={href} className="flex w-full items-center gap-2">
-                        <Icon /> {label}
-                      </NavLink>
-                    </DropdownMenu.Item>
-                  );
-                })}
-                <DropdownMenu.Separator className="my-0.5 border border-gray-300" />
-                <DropdownMenu.Item
-                  className="relative flex h-[25px] cursor-pointer select-none items-center gap-2 rounded-[3px] pl-2 pr-[5px] text-[13px] leading-none outline-none transition hover:translate-x-2 data-[disabled]:pointer-events-none data-[highlighted]:bg-cyan-500 data-[disabled]:text-gray-500 data-[highlighted]:text-white"
-                  onClick={() => signOut(auth)}
-                >
-                  <LogoutIcon /> Log out
-                </DropdownMenu.Item>
-                <DropdownMenu.Arrow className="fill-gray-200" />
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root> */}
+        <div className="flex-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MenuIcon className="text-cyan-500" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent onCloseAutoFocus={(e) => e.preventDefault()}>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {NAVIGATION_OPTIONS.map(({ href, icon, label }) => {
+                const Icon = icon;
+                return (
+                  <DropdownMenuItem
+                    key={href}
+                    className="relative flex cursor-pointer select-none items-center rounded-[3px] pr-[5px] text-[13px] leading-none outline-none transition hover:translate-x-2 hover:bg-cyan-400 hover:text-white data-[disabled]:pointer-events-none data-[highlighted]:bg-cyan-500 data-[disabled]:text-gray-500 data-[highlighted]:text-white"
+                  >
+                    <Link href={href} className="flex w-full items-center gap-2">
+                      <Icon /> {label}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
