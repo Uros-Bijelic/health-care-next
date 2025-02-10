@@ -28,7 +28,6 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ asLayout }) => {
             fill="currentFill"
           />
         </svg>
-        <span className="sr-only">Loading...</span>
       </div>
     </div>
   );
