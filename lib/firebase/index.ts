@@ -42,4 +42,4 @@ export class FirestoreClass implements IFirestoreClass {
   }
 }
 
-export const firebaseInit = new FirestoreClass();
+export const firebaseInstance = new FirestoreClass();
