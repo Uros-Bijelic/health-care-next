@@ -6,8 +6,6 @@ import { Firestore, getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
@@ -19,12 +17,11 @@ const firebaseConfig = {
 };
 
 interface IFirestoreClass {
-  getAuth(): Auth;
   getDb(): Firestore;
+  getAuth(): Auth;
 }
 
-class FirestoreClass implements IFirestoreClass {
-  // private app: FirebaseApp;
+export class FirestoreClass implements IFirestoreClass {
   private db: Firestore;
   private auth: Auth;
 
@@ -37,14 +34,10 @@ class FirestoreClass implements IFirestoreClass {
   public getDb() {
     return this.db;
   }
+
   public getAuth() {
     return this.auth;
   }
 }
 
-export const firebaseInstance = new FirestoreClass();
-
-// Initialize Firebase
-// export const app = initializeApp(firebaseConfig);
-// export const db = getFirestore(app);
-// const analytics = getAnalytics(app);
+export const firebase = new FirestoreClass();
