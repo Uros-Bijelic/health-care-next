@@ -1,22 +1,25 @@
 'use client';
 
 import DatePicker from '@/components/ui/DatePicker';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import RHFInput from '@/components/ui/RHFInputs/RHFInput';
 import RHFTextarea from '@/components/ui/RHFInputs/RHFTextarea';
 import { Button } from '@/components/ui/button';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { toast } from '@/hooks/use-toast';
+import { useUpdateUser } from '@/lib/hooks/mutations/use-update-user';
 import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
 import { IUserProfileSchema, userProfileSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
-
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 // ----------------------------------------------------------------
 
-type Props = {};
-
-const ProfileEdit = (props: Props) => {
+const ProfileEdit = () => {
+  const router = useRouter();
   const { data: userData, isPending, error: userDataError } = useFetchUser();
+  const { mutateAsync: updateUserAsync } = useUpdateUser();
 
   const methods = useForm<IUserProfileSchema>({
     resolver: zodResolver(userProfileSchema),
@@ -25,7 +28,7 @@ const ProfileEdit = (props: Props) => {
       lastName: '',
       userName: '',
       email: '',
-      birthDate: undefined,
+      birthDate: null,
       allergies: '',
       profileImg: '',
       specialNotes: '',
@@ -41,7 +44,7 @@ const ProfileEdit = (props: Props) => {
       lastName: userData?.lastName || '',
       userName: userData?.userName || '',
       email: userData?.email || '',
-      birthDate: userData?.birthDate?.toDate() || undefined,
+      birthDate: userData?.birthDate?.toDate() || null,
       allergies: userData?.allergies || '',
       profileImg: userData?.profileImg || '',
       specialNotes: userData?.specialNotes || '',
@@ -61,28 +64,35 @@ const ProfileEdit = (props: Props) => {
   } = methods;
 
   const onSubmit = async (data: IUserProfileSchema) => {
-    console.log('DATA U SUBMITU', data);
-    // try {
-    //   await updateUserAsync(
-    //     { data },
-    //     {
-    //       onError(error) {
-    //         toast.error(error.message);
-    //       },
-    //       onSuccess() {
-    //         toast.success('Profile updated successfully');
-    //         navigate('/');
-    //       },
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.log('Error updating User profile info', error);
-    // }
+    try {
+      await updateUserAsync(
+        { data },
+        {
+          onError(error) {
+            toast({ variant: 'destructive', title: error.message });
+          },
+          onSuccess() {
+            toast({
+              variant: 'default',
+              title: 'Profile updated successfully',
+            });
+            router.push('/');
+          },
+        },
+      );
+    } catch (error) {
+      console.log('Error updating User profile info', error);
+    }
   };
+
+  if (isPending) {
+    return <LoadingSpinner asLayout />;
+  }
 
   return (
     <section className="m-auto flex flex-1 flex-col gap-2 p-3 max-sm:w-[min(600px,100%)] sm:gap-4">
-      <h2 className="h2-bold">Your Health Card</h2>
+      <h2 className="text-[20px] font-bold">Your Health Card</h2>
+      <p className="p2-bold">{userDataError?.message}</p>
       <FormProvider {...methods}>
         <form className="gap-6 md:flex lg:gap-10" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-[min(600px,100%)]">
