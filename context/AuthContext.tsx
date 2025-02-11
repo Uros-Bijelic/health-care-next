@@ -2,7 +2,7 @@
 
 import { firebaseInstance } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 // ----------------------------------------------------------------
@@ -20,6 +20,7 @@ type AuthContextProviderProps = {
 };
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+  const pathName = usePathname();
   const router = useRouter();
   const auth = firebaseInstance.getAuth();
 
@@ -37,16 +38,20 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        console.log('IMA USERA');
         setUser(currentUser);
+        if (pathName === '/login' || pathName === '/register') {
+          router.push('/');
+        }
       } else {
-        console.log('NEMA USERA');
         setUser(null);
+        if (pathName !== '/login' && pathName !== '/register') {
+          router.push('/login');
+        }
       }
 
       return () => unsubscribe();
     });
-  }, [auth]);
+  }, [auth, pathName, router]);
 
   return <AuthContext.Provider value={{ user, signOutUser }}>{children}</AuthContext.Provider>;
 };

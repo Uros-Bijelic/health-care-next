@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import ButtonLoadingSpinner from '@/components/ui/ButtonLoadingSpinner';
 import RHFInput from '@/components/ui/RHFInputs/RHFInput';
 import { useLoginUser } from '@/lib/hooks/mutations/use-login-user';
 import { ILoginFormSchema, loginFormSchema } from '@/lib/validation';
@@ -54,7 +55,7 @@ const Login: React.FC = () => {
           <RHFInput name="email" type="email" label="Your Email" placeholder="Email" />
           <RHFInput name="password" type="password" label="Your Password" placeholder="Password" />
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Processing...' : 'Login'}
+            {isSubmitting && <ButtonLoadingSpinner />} {isSubmitting ? 'Processing...' : 'Login'}
           </Button>
         </form>
         <div className="flex flex-col gap-2 text-center">

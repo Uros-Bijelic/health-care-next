@@ -1,6 +1,7 @@
+import { useAuthContext } from '@/context/AuthContext';
 import { EFirestoreCollections, EQueryKeys } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
-// import type { IUserProfileSchemaDTO } from '@/lib/validation';
+import type { IUserProfileSchemaDTO } from '@/lib/validation';
 import { errorMessageGenerator } from '@/utils/error-handling';
 import { useQuery } from '@tanstack/react-query';
 import { doc, FirestoreError, getDoc } from 'firebase/firestore';
@@ -8,15 +9,14 @@ import { doc, FirestoreError, getDoc } from 'firebase/firestore';
 // ----------------------------------------------------------------
 
 export const useFetchUser = () => {
-  const auth = firebaseInstance.getAuth();
   const db = firebaseInstance.getDb();
-  const userId = auth.currentUser!.uid;
+  const { user } = useAuthContext();
 
-  return useQuery<Partial<unknown>>({
-    queryKey: [EQueryKeys.USER, userId],
+  return useQuery<Partial<IUserProfileSchemaDTO>>({
+    queryKey: [EQueryKeys.USER, user?.uid],
     queryFn: async () => {
       try {
-        const userDocRef = doc(db, EFirestoreCollections.USERS, userId);
+        const userDocRef = doc(db, EFirestoreCollections.USERS, user!.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (!userDocSnap.exists()) {
@@ -33,5 +33,6 @@ export const useFetchUser = () => {
         throw new Error('An unexpected error occurred');
       }
     },
+    enabled: !!user?.uid,
   });
 };

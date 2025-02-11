@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import ButtonLoadingSpinner from '@/components/ui/ButtonLoadingSpinner';
 import RHFInput from '@/components/ui/RHFInputs/RHFInput';
 import RHFSelect from '@/components/ui/RHFInputs/RHFSelect';
 import { toast } from '@/hooks/use-toast';
@@ -37,7 +38,7 @@ const Register: React.FC = () => {
     const { email, password, role, userName } = data;
 
     try {
-      const response = await registerUserAsync(
+      await registerUserAsync(
         { password, userName, email, role },
         {
           onSuccess() {
@@ -49,7 +50,6 @@ const Register: React.FC = () => {
           },
         },
       );
-      console.log('received response', response);
     } catch (error) {
       console.log('Error registering new user in Register page.tsx', error);
     }
@@ -71,7 +71,7 @@ const Register: React.FC = () => {
             placeholder="Choose your role"
           />
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Processing...' : 'Sign Up'}
+            {isSubmitting && <ButtonLoadingSpinner />} {isSubmitting ? 'Processing...' : 'Sign Up'}
           </Button>
         </form>
         <div className="flex flex-col gap-2 text-center">
