@@ -12,8 +12,12 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <section>
       <Header />
-      <Sidebar />
-      {children}
+      <main className="flex">
+        <Sidebar />
+        <div className="mx-auto h-full max-w-7xl border-2 border-red-500 p-2 sm:p-4">
+          {children}
+        </div>
+      </main>
     </section>
   );
 };

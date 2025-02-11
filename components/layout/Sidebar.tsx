@@ -12,7 +12,7 @@ import { Button } from '../ui/button';
 const Sidebar: React.FC = () => {
   const { signOutUser } = useAuthContext();
   return (
-    <div className="sticky left-0 top-[80px] flex h-[calc(100vh-80px)] w-[max(240px)] flex-col gap-5 bg-cyan-500 p-5 text-white">
+    <div className="sticky left-0 top-[80px] flex h-[calc(100vh-80px)] w-[max(240px)] flex-col gap-5 bg-cyan-500 p-5 text-white max-sm:hidden">
       <div className="mt-2 flex gap-1">
         <DashboardIcon width={30} />
         <h2 className="h2-bold">Health Records</h2>
