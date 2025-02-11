@@ -37,7 +37,7 @@ export const userProfileSchema = z.object({
   allergies: z.string().trim().optional(),
   specialNotes: z.string().trim().optional(),
   address: z.object({
-    state: z.string().trim().min(3, 'State is required'),
+    country: z.string().trim().min(3, 'Country is required'),
     city: z.string().trim().min(3, 'City is required'),
     street: z.string().trim().min(3, 'Street is required'),
     phone: z.string().trim().min(3, 'Phone is required'),
