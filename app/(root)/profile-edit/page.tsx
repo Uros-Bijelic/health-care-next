@@ -110,7 +110,6 @@ const ProfileEdit = () => {
                     <FormLabel>Birth Date</FormLabel>
                     <FormControl>
                       <DatePicker
-                        // label="Birth Date"
                         errorMessage={error?.message}
                         onChange={onChange}
                         onBlur={onBlur}

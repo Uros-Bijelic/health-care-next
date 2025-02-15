@@ -1,4 +1,3 @@
-import { useAuthContext } from '@/context/AuthContext';
 import { updateUser } from '@/lib/actions/mutations';
 import { EQueryKeys } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
@@ -12,7 +11,6 @@ interface IMutationFnArgs {
 }
 
 export const useUpdateUser = () => {
-  // const userId = useAuthContext().user?.uid ?? '';
   const userId = firebaseInstance.getAuth().currentUser?.uid ?? '';
 
   const queryClent = useQueryClient();
