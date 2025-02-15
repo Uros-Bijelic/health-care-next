@@ -31,13 +31,13 @@ export const userProfileSchema = z.object({
   userName: z.string().trim().min(3, 'Username is required and must be at least 3 characters long'),
   firstName: z.string().trim().min(1, 'First name is required'),
   lastName: z.string().trim().min(1, 'Last name is required'),
-  birthDate: z.date({ required_error: 'Date of birth is required' }).optional(),
+  birthDate: z.date({ required_error: 'Date of birth is required' }).optional().nullable(),
   profileImg: z.string().trim().optional(), // * add .url() method if later in the app i decide to store user images (probably with google)???
   email: z.string().trim().email('Please provide valid email address'),
   allergies: z.string().trim().optional(),
   specialNotes: z.string().trim().optional(),
   address: z.object({
-    state: z.string().trim().min(3, 'State is required'),
+    country: z.string().trim().min(3, 'Country is required'),
     city: z.string().trim().min(3, 'City is required'),
     street: z.string().trim().min(3, 'Street is required'),
     phone: z.string().trim().min(3, 'Phone is required'),

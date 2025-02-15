@@ -1,5 +1,3 @@
-'use client';
-
 import Header from '@/components/layout/Header';
 import Sidebar from '@/components/layout/Sidebar';
 import type { ReactNode } from 'react';
@@ -14,9 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Header />
       <main className="flex">
         <Sidebar />
-        <div className="mx-auto h-full max-w-7xl border-2 border-red-500 p-2 sm:p-4">
-          {children}
-        </div>
+        <div className="mx-auto flex h-full max-w-7xl flex-1 p-2 sm:p-4">{children}</div>
       </main>
     </section>
   );
