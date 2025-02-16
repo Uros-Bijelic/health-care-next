@@ -2,20 +2,170 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*! CHECC DUTING DEV WHAT COLORS SHOULD BE USED*/
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-rose-600: oklch(0.586 0.253 17.585);
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: oklch(0.789 0.154 211.53);
+    --primary-foreground: 0 0% 98%;
+    --secondary: oklch(0.702 0.183 293.541);
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utitlties {
+  /* TYPOGRAPHY  */
+  .d1-bold {
+    @apply text-[31px] font-bold text-slate-800 dark:text-slate-100 max-md:text-[27px] md:leading-[40px];
+  }
+  .d2-bold {
+    @apply text-2xl font-bold text-slate-800 dark:text-slate-100;
+  }
+  .h1-medium {
+    @apply text-[20px] font-medium leading-[28px] text-slate-800 dark:text-slate-200;
+  }
+  .h2-medium {
+    @apply text-base font-medium text-slate-800 dark:text-slate-200;
+  }
+  .p1-bold {
+    @apply text-[18px] font-bold leading-[21.6px] text-slate-800 dark:text-slate-200;
+  }
+  .p1-medium {
+    @apply text-[14px] font-medium leading-[20px] text-slate-400 dark:text-slate-300 md:!text-[18px];
+  }
+  .p1-regular {
+    @apply text-[18px] font-normal leading-[20px] text-slate-800 dark:text-slate-100;
+  }
+  .p2-bold {
+    @apply text-base font-bold text-slate-800 dark:text-slate-200;
+  }
+  .p2-medium {
+    @apply text-base font-medium text-slate-800 dark:text-slate-200;
+  }
+  .p2-regular {
+    @apply text-base font-normal text-slate-400 dark:text-slate-300;
+  }
+  .p3-bold {
+    @apply text-[14px] font-bold leading-[24px] text-slate-800 dark:text-slate-100;
+  }
+  .p3-medium {
+    @apply text-sm font-medium text-slate-800 dark:text-slate-200;
+  }
+  .p3-regular {
+    @apply text-sm font-normal text-slate-400 dark:text-slate-200;
+  }
+  .p4-medium {
+    @apply text-[10px] font-medium text-slate-800 dark:text-slate-200 md:text-xs;
+  }
+  .p4-bold {
+    @apply text-xs font-bold text-slate-700 dark:text-slate-400;
+  }
+  .p4-regular {
+    @apply text-xs font-normal text-slate-400 dark:text-slate-200;
+  }
+  .subtitle-normal {
+    @apply text-[10px] font-normal leading-[14px] text-slate-400;
+  }
+  .subtitle-medium {
+    @apply text-[10px] font-normal leading-[14px] text-slate-400;
+  }
+  .cap-10 {
+    @apply text-[10px] font-medium leading-[13px] text-slate-400;
+  }
+  .cap-8 {
+    @apply text-[8px] font-medium leading-[10.4px] text-slate-400;
+  }
+  /* TYPOGRAPHY  */
+
+  /* DARK LIGHT MODE */
+  /* KEEP THIS JUST IN CASE I NEED BLACK AND WHITE MODE */
+  /* .bg-light100__dark800 {
+    @apply bg-white-100 dark:bg-black-800;
+  }
+  .bg-light200__dark900 {
+    @apply bg-white-200 dark:bg-black-900;
+  }
+  .bg-light200__dark800 {
+    @apply bg-white-200 dark:bg-black-800;
+  }
+  .bg-light200__dark700 {
+    @apply bg-white-200 dark:bg-black-700;
+  } */
+  /* KEEP THIS JUST IN CASE I NEED BLACK AND WHITE MODE */
+  /* .hover-sidebar-items {
+    @apply hover:dark:bg-slate-700 hover:bg-[#F8FAFC] transition-colors;
+  }
+  .icon-light400__dark300 {
+    @apply text-slate-400 dark:text-slate-300;
+  }
+  .nav-btn-light200__dark700 {
+    @apply bg-slate-200 dark:bg-slate-700 rounded-[7px] size-[32px] lg:size-[40px];
+  } */
+  /* DARK LIGHT MODE */
+
+  /* FLEX */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  /* FLEX */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
