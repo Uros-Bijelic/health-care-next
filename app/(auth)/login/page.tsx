@@ -1,9 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import LoadingButton from '@/components/ui/loading-button';
 import RHFInput from '@/components/ui/rhf-inputs/rhf-input';
+import { useLoginUser } from '@/lib/hooks/mutations/use-login-user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -15,6 +17,7 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 const Login = () => {
+  const router = useRouter();
   const methods = useForm({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -28,20 +31,27 @@ const Login = () => {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = (data: LoginFormSchema) => {
-    console.log('data u loginu', data);
+  const { error, mutateAsync: loginUserAsync } = useLoginUser();
+
+  const onSubmit = async (data: LoginFormSchema) => {
+    await loginUserAsync(data, {
+      onSuccess() {
+        router.push('/');
+      },
+    });
   };
 
   return (
     <div className="flex w-[min(400px,100%)] flex-col gap-3 bg-white p-2 shadow-xl sm:p-5">
       <h2 className="h2-bold text-center">Login</h2>
+      {error && <p className="p1-medium text-center text-red-500">{error.message}</p>}
       <FormProvider {...methods}>
         <form action="" className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <RHFInput name="email" type="email" label="Your Email" placeholder="Email" />
           <RHFInput name="password" type="password" label="Your Password" placeholder="Password" />
-          <Button type="submit" disabled={isSubmitting}>
+          <LoadingButton type="submit" disabled={isSubmitting} isLoaderSpinning={isSubmitting}>
             {isSubmitting ? 'Processing...' : 'Login'}
-          </Button>
+          </LoadingButton>
         </form>
         <div className="flex flex-col gap-2 text-center">
           <p className="p2-medium w-full text-center">

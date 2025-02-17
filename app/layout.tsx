@@ -1,6 +1,8 @@
-import { Toaster } from '@/components/ui/sonner';
-import type { Metadata } from 'next';
+import AuthContextProvider from '@/context/auth-context';
+import QueryClientProvider from '@/context/tanstack-query-context';
+import { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Toaster } from 'sonner';
 import './globals.css';
 
 const geistSans = Geist({
@@ -27,10 +29,10 @@ const RootLayout = ({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-100 antialiased`}>
-        <main>
-          {children}
-          <Toaster />
-        </main>
+        <Toaster />
+        <QueryClientProvider>
+          <AuthContextProvider>{children}</AuthContextProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
