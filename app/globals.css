@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/*! CHECC DUTING DEV WHAT COLORS SHOULD BE USED*/
-
 @layer base {
   :root {
     --color-rose-600: oklch(0.586 0.253 17.585);
@@ -124,32 +122,6 @@
     @apply text-[8px] font-medium leading-[10.4px] text-slate-400;
   }
   /* TYPOGRAPHY  */
-
-  /* DARK LIGHT MODE */
-  /* KEEP THIS JUST IN CASE I NEED BLACK AND WHITE MODE */
-  /* .bg-light100__dark800 {
-    @apply bg-white-100 dark:bg-black-800;
-  }
-  .bg-light200__dark900 {
-    @apply bg-white-200 dark:bg-black-900;
-  }
-  .bg-light200__dark800 {
-    @apply bg-white-200 dark:bg-black-800;
-  }
-  .bg-light200__dark700 {
-    @apply bg-white-200 dark:bg-black-700;
-  } */
-  /* KEEP THIS JUST IN CASE I NEED BLACK AND WHITE MODE */
-  /* .hover-sidebar-items {
-    @apply hover:dark:bg-slate-700 hover:bg-[#F8FAFC] transition-colors;
-  }
-  .icon-light400__dark300 {
-    @apply text-slate-400 dark:text-slate-300;
-  }
-  .nav-btn-light200__dark700 {
-    @apply bg-slate-200 dark:bg-slate-700 rounded-[7px] size-[32px] lg:size-[40px];
-  } */
-  /* DARK LIGHT MODE */
 
   /* FLEX */
   .flex-center {

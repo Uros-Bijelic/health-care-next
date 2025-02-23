@@ -1,22 +1,43 @@
 'use client';
 
-import { useAuthContext } from '@/context/AuthContext';
-import { NAVIGATION_OPTIONS } from '@/lib/constants';
+import { useAuthContext } from '@/context/auth-context';
+import {
+  FilePlus,
+  HomeIcon,
+  LayoutDashboardIcon,
+  LogOutIcon,
+  UserRoundPenIcon,
+} from 'lucide-react';
 import Link from 'next/link';
-import DashboardIcon from '../icons/Dashboard';
-import LogoutIcon from '../icons/Logout';
 import { Button } from '../ui/button';
 
-// ----------------------------------------------------------------
+export const NAVIGATION_OPTIONS = [
+  {
+    href: '/',
+    label: 'Dashboard',
+    icon: HomeIcon,
+  },
+  {
+    href: '/records/create',
+    label: 'New Record',
+    icon: FilePlus,
+  },
+  {
+    href: '/profile/edit',
+    label: 'Edit Profile',
+    icon: UserRoundPenIcon,
+  },
+];
 
-const Sidebar: React.FC = () => {
+const Sidebar = () => {
   const { signOutUser } = useAuthContext();
+
   return (
-    <div className="sticky left-0 top-[80px] flex h-[calc(100vh-80px)] w-[max(240px)] flex-col gap-5 bg-cyan-500 p-5 text-white max-sm:hidden">
-      <div className="mt-2 flex gap-1">
-        <DashboardIcon width={30} />
+    <div className="sticky left-0 top-[80px] flex h-[calc(100vh-80px)] flex-col gap-5 bg-cyan-500 p-5 text-white lg:w-[max(240px)]">
+      <Link href="/" className="mt-2 flex items-center gap-1">
+        <LayoutDashboardIcon width={30} height={30} />
         <h2 className="h2-bold">Health Records</h2>
-      </div>
+      </Link>
       <ul className="flex flex-col gap-2">
         {NAVIGATION_OPTIONS.map(({ href, icon, label }) => {
           const Icon = icon;
@@ -33,9 +54,9 @@ const Sidebar: React.FC = () => {
         <li className="flex gap-2 transition hover:translate-x-2">
           <Button
             onClick={signOutUser}
-            className="text-md bg-transparent p-0 shadow-none hover:bg-transparent"
+            className="text-md bg-transparent p-0 shadow-none hover:bg-transparent [&_svg]:size-auto"
           >
-            <LogoutIcon /> Log out
+            <LogOutIcon /> Log out
           </Button>
         </li>
       </ul>

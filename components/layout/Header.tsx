@@ -1,37 +1,37 @@
 'use client';
 
+import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
+import { CircleXIcon, MenuIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-// import LoadingSpinner from '../ui/LoadingSpinner';
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { NAVIGATION_OPTIONS } from '@/lib/constants';
-import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
-import LogoutIcon from '../icons/Logout';
-import MenuIcon from '../icons/Menu';
-import LoadingSpinner from '../ui/LoadingSpinner';
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { useState } from 'react';
+import SpinningLoader from '../ui/SpinningLoader';
+import Sidebar from './Sidebar';
 
-// ----------------------------------------------------------------
-
-const Header: React.FC = () => {
-  const { data, isPending } = useFetchUser();
-
-  let initials = '';
-
-  if (data?.firstName && data?.lastName) {
-    initials = data.firstName.charAt(0) + data.lastName.charAt(0);
-  } else {
-    initials = data?.userName?.charAt(0) || '';
+const getUserInitials = (userFirstName?: string, userLastName?: string, userName?: string) => {
+  if (userFirstName && userLastName) {
+    return userFirstName.charAt(0) + userLastName.charAt(0);
   }
 
+  return userName?.charAt(0) || '';
+};
+
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { data: user, isPending } = useFetchUser();
+
   if (isPending) {
-    return <LoadingSpinner asLayout />;
+    return <SpinningLoader asOverlay />;
   }
 
   return (
@@ -41,36 +41,35 @@ const Header: React.FC = () => {
       </Link>
       <div className="flex items-center gap-2">
         <div className="flex-center size-[36px] rounded-full bg-cyan-500 text-white">
-          {initials}
+          {getUserInitials(user?.firstName, user?.lastName, user?.userName)}
         </div>
-        <p className="p3-medium">{data?.userName}</p>
-        <div className="flex-center sm:hidden">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
+        <p className="p3-medium">{user?.userName}</p>
+        <div className="flex-center lg:hidden">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
               <MenuIcon className="text-cyan-500" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent onCloseAutoFocus={(e) => e.preventDefault()}>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {NAVIGATION_OPTIONS.map(({ href, icon, label }) => {
-                const Icon = icon;
-                return (
-                  <DropdownMenuItem
-                    key={href}
-                    className="relative flex cursor-pointer select-none items-center rounded-[3px] pr-[5px] text-[13px] leading-none outline-none transition hover:translate-x-2 hover:bg-cyan-400 hover:text-white data-[disabled]:pointer-events-none data-[highlighted]:bg-cyan-500 data-[disabled]:text-gray-500 data-[highlighted]:text-white"
-                  >
-                    <Link href={href} className="flex w-full items-center gap-2">
-                      <Icon /> {label}
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="relative flex cursor-pointer select-none items-center rounded-[3px] pr-[5px] text-[13px] leading-none outline-none transition hover:translate-x-2 hover:bg-cyan-400 hover:text-white data-[disabled]:pointer-events-none data-[highlighted]:bg-cyan-500 data-[disabled]:text-gray-500 data-[highlighted]:text-white">
-                <LogoutIcon width={20} height={20} /> Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SheetTrigger>
+            <SheetContent
+              className="w-[min(320px,100%)] border-transparent bg-cyan-500"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              onCloseAutoFocus={(e) => e.preventDefault}
+              onPointerDownOutside={() => setIsOpen(false)}
+              onInteractOutside={() => setIsOpen(false)}
+              onClick={() => setIsOpen(false)}
+              withDefaultClose={false}
+            >
+              <SheetClose asChild>
+                <CircleXIcon
+                  width={32}
+                  height={32}
+                  className="absolute right-10 cursor-pointer text-white"
+                />
+              </SheetClose>
+              <SheetTitle />
+              <SheetDescription />
+              <Sidebar />
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

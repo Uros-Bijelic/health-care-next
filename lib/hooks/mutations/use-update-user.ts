@@ -1,13 +1,13 @@
+import { UserProfileSchema } from '@/app/(root)/profile/edit/page';
 import { updateUser } from '@/lib/actions/mutations';
 import { EQueryKeys } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
-import { IUserProfileSchema } from '@/lib/validation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // ----------------------------------------------------------------
 
 interface IMutationFnArgs {
-  data: IUserProfileSchema;
+  data: UserProfileSchema;
 }
 
 export const useUpdateUser = () => {

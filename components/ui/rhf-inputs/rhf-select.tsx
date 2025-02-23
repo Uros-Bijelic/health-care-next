@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import {
   FormControl,
   FormDescription,
@@ -27,10 +29,9 @@ type RHFSelectProps = {
     value: string;
     label: string;
   }[];
-  description?: string;
 } & SelectProps;
 
-const RHFSelect = ({ label, options, placeholder, name, description }: RHFSelectProps) => {
+const RHFSelect = ({ label, options, placeholder, name }: RHFSelectProps) => {
   const { control } = useFormContext();
 
   return (
@@ -54,7 +55,10 @@ const RHFSelect = ({ label, options, placeholder, name, description }: RHFSelect
               ))}
             </SelectContent>
           </Select>
-          {description && <FormDescription>{description}</FormDescription>}
+          <FormDescription>
+            You can manage email addresses in your{' '}
+            <Link href="/examples/forms">email settings</Link>.
+          </FormDescription>
           <FormMessage />
         </FormItem>
       )}

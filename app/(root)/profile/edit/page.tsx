@@ -1,27 +1,54 @@
 'use client';
 
-import DatePicker from '@/components/ui/DatePicker';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import RHFInput from '@/components/ui/RHFInputs/RHFInput';
-import RHFTextarea from '@/components/ui/RHFInputs/RHFTextarea';
-import { Button } from '@/components/ui/button';
+import DatePicker from '@/components/ui/date-picker';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import LoadingButton from '@/components/ui/loading-button';
+import RHFInput from '@/components/ui/rhf-inputs/rhf-input';
+import RHFTextarea from '@/components/ui/rhf-inputs/rhf-textarea';
+import SpinningLoader from '@/components/ui/SpinningLoader';
 import { useUpdateUser } from '@/lib/hooks/mutations/use-update-user';
 import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
-import { IUserProfileSchema, userProfileSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
-// ----------------------------------------------------------------
+export const userProfileSchema = z.object({
+  userName: z.string().trim().min(3, 'Username is required and must be at least 3 characters long'),
+  firstName: z.string().trim().min(1, 'First name is required'),
+  lastName: z.string().trim().min(1, 'Last name is required'),
+  birthDate: z.date({ required_error: 'Date of birth is required' }).optional().nullable(),
+  profileImg: z.string().trim().optional(), // * add .url() method if later in the app i decide to store user images (probably with google)???
+  email: z.string().trim().email('Please provide valid email address'),
+  allergies: z.string().trim().optional(),
+  specialNotes: z.string().trim().optional(),
+  address: z.object({
+    country: z.string().trim().min(3, 'Country is required'),
+    city: z.string().trim().min(3, 'City is required'),
+    street: z.string().trim().min(3, 'Street is required'),
+    phone: z.string().trim().min(3, 'Phone is required'),
+  }),
+});
+
+export type UserProfileSchema = z.infer<typeof userProfileSchema>;
+
+export const userProfileSchemaDTO = userProfileSchema.extend({
+  id: z.string().trim(),
+  createdAt: z.instanceof(Timestamp),
+  updatedAt: z.instanceof(Timestamp),
+  birthDate: z.instanceof(Timestamp).optional(),
+});
+
+export type UserProfileSchemaDTO = z.infer<typeof userProfileSchemaDTO>;
 
 const ProfileEdit = () => {
   const router = useRouter();
   const { data: userData, isPending, error: userDataError } = useFetchUser();
   const { mutateAsync: updateUserAsync } = useUpdateUser();
 
-  const methods = useForm<IUserProfileSchema>({
+  const form = useForm<UserProfileSchema>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
       firstName: '',
@@ -61,9 +88,9 @@ const ProfileEdit = () => {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = methods;
+  } = form;
 
-  const onSubmit = async (data: IUserProfileSchema) => {
+  const onSubmit = async (data: UserProfileSchema) => {
     try {
       await updateUserAsync(
         { data },
@@ -83,14 +110,14 @@ const ProfileEdit = () => {
   };
 
   if (isPending) {
-    return <LoadingSpinner asLayout />;
+    return <SpinningLoader asOverlay />;
   }
 
   return (
-    <section className="m-auto flex flex-1 flex-col gap-2 p-3 max-sm:w-[min(600px,100%)] sm:gap-4">
+    <div className="mx-auto flex w-[min(1000px,100%)] flex-1 flex-col gap-2 p-3 sm:gap-4">
       <h2 className="text-[20px] font-bold">Your Health Card</h2>
       <p className="p2-bold">{userDataError?.message}</p>
-      <FormProvider {...methods}>
+      <FormProvider {...form}>
         <form className="gap-6 md:flex lg:gap-10" onSubmit={handleSubmit(onSubmit)}>
           <div className="w-[min(600px,100%)]">
             <p className="p1-bold mb-2 underline">Personal Info</p>
@@ -131,13 +158,18 @@ const ProfileEdit = () => {
               <RHFInput name="address.street" label="Street" placeholder="Street" />
               <RHFInput name="address.phone" label="Phone" placeholder="Phone" />
             </div>
-            <Button type="submit" className="mt-4 w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Processing...' : 'Submit'}
-            </Button>
+            <LoadingButton
+              type="submit"
+              className="mt-4 w-full"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+            >
+              Update
+            </LoadingButton>
           </div>
         </form>
       </FormProvider>
-    </section>
+    </div>
   );
 };
 

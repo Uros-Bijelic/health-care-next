@@ -1,8 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithRef } from 'react';
-import { useFormContext } from 'react-hook-form';
-
 import {
   FormControl,
   FormDescription,
@@ -12,6 +9,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import type { ComponentPropsWithRef } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 type RHFInputProps = {
   name: string;

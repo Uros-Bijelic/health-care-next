@@ -1,8 +1,8 @@
+import { CalendarClockIcon } from 'lucide-react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import CalendarIcon from '../icons/Calendar';
 
-import './DatePicker.css';
+import './date-picker.css';
 
 // ----------------------------------------------------------------
 
@@ -22,7 +22,7 @@ const DatePicker: React.FC<IDatePickerProps> = ({ label = '', errorMessage = '',
       <ReactDatePicker
         className="w-full cursor-pointer rounded-md border-2 border-gray-300 text-gray-800 outline-none transition placeholder:text-sm focus:border-cyan-400"
         showIcon
-        icon={<CalendarIcon />}
+        icon={<CalendarClockIcon />}
         showYearDropdown
         showMonthDropdown
         dropdownMode="select"

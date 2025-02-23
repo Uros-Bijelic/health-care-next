@@ -2,19 +2,21 @@ import Header from '@/components/layout/Header';
 import Sidebar from '@/components/layout/Sidebar';
 import type { ReactNode } from 'react';
 
-type LayoutProps = {
+type Props = {
   children?: ReactNode;
 };
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children }: Props) => {
   return (
-    <section>
+    <div className="flex flex-col">
       <Header />
-      <main className="flex">
-        <Sidebar />
-        <div className="mx-auto flex h-full max-w-7xl flex-1 p-2 sm:p-4">{children}</div>
+      <main className="flex flex-1">
+        <div className="max-lg:hidden">
+          <Sidebar />
+        </div>
+        <div className="w-full max-w-7xl p-2 sm:p-4">{children}</div>
       </main>
-    </section>
+    </div>
   );
 };
 

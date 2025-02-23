@@ -1,18 +1,16 @@
-import { useAuthContext } from '@/context/AuthContext';
+import { UserProfileSchemaDTO } from '@/app/(root)/profile/edit/page';
+import { useAuthContext } from '@/context/auth-context';
 import { EFirestoreCollections, EQueryKeys } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
-import type { IUserProfileSchemaDTO } from '@/lib/validation';
-import { errorMessageGenerator } from '@/utils/error-handling';
+import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import { useQuery } from '@tanstack/react-query';
 import { doc, FirestoreError, getDoc } from 'firebase/firestore';
-
-// ----------------------------------------------------------------
 
 export const useFetchUser = () => {
   const db = firebaseInstance.getDb();
   const { user } = useAuthContext();
 
-  return useQuery<Partial<IUserProfileSchemaDTO>>({
+  return useQuery<Partial<UserProfileSchemaDTO>>({
     queryKey: [EQueryKeys.USER, user?.uid],
     queryFn: async () => {
       try {
@@ -25,9 +23,8 @@ export const useFetchUser = () => {
 
         return userDocSnap.data();
       } catch (error) {
-        console.log('Error fetching user document', error);
         if (error instanceof FirestoreError) {
-          const errorMessage = errorMessageGenerator.getFirestoreErrorMessage(error.code);
+          const errorMessage = getFirestoreErrorMessage(error.code);
           throw new Error(errorMessage);
         }
         throw new Error('An unexpected error occurred');

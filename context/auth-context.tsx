@@ -5,19 +5,18 @@ import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
-// ----------------------------------------------------------------
-
 type AuthContextProps = {
   user: User | null;
   signOutUser: () => void;
 };
 
-// https://stackoverflow.com/questions/78333331/how-to-use-tanstack-query-in-sync-with-firebase-firestore-to-leverage-the-featur
 const AuthContext = createContext<AuthContextProps>({ user: null, signOutUser: () => {} });
 
 type AuthContextProviderProps = {
   children: ReactNode;
 };
+
+const AUTH_ROUTES = ['/login', '/register'];
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const pathName = usePathname();
@@ -29,7 +28,6 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const signOutUser = async () => {
     try {
       await signOut(auth);
-      router.push('/login');
     } catch (error) {
       console.log('Error signing out user: ', error);
     }
@@ -37,14 +35,13 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       if (currentUser) {
-        setUser(currentUser);
-        if (pathName === '/login' || pathName === '/register') {
+        if (AUTH_ROUTES.includes(pathName)) {
           router.push('/');
         }
       } else {
-        setUser(null);
-        if (pathName !== '/login' && pathName !== '/register') {
+        if (!AUTH_ROUTES.includes(pathName)) {
           router.push('/login');
         }
       }

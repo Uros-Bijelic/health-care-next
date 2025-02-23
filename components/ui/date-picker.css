@@ -29,3 +29,10 @@
   li.react-datepicker__time-list-item--selected:hover {
   background-color: #06b6d4;
 }
+
+.react-datepicker__day.react-datepicker__day--keyboard-selected {
+  background-color: #22d3ee;
+}
+.react-datepicker__day.react-datepicker__day--keyboard-selected:hover {
+  background-color: #06b6d4;
+}
