@@ -4,7 +4,7 @@ export enum EQueryKeys {
   USER = 'user',
 }
 
-export enum EFirestoreCollections {
-  USERS = 'users',
-  MEDICAL_EXAMINATIONS = 'medical_examinations',
-}
+export const FIRESTORE_COLLECTIONS = {
+  USERS: 'users',
+  MEDICAL_EXAMINATIONS: 'medical_examinations',
+};

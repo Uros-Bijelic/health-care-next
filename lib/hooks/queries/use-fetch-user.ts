@@ -1,6 +1,7 @@
-import { UserProfileSchemaDTO } from '@/app/(root)/profile/edit/page';
+// import { UserProfileSchemaDTO } from '@/app/(root)/profile/edit/page';
+import { UserProfileSchemaDTO } from '@/components/features/user/ProfileEdit';
 import { useAuthContext } from '@/context/auth-context';
-import { EFirestoreCollections, EQueryKeys } from '@/lib/constants';
+import { EQueryKeys, FIRESTORE_COLLECTIONS } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import { useQuery } from '@tanstack/react-query';
@@ -14,7 +15,7 @@ export const useFetchUser = () => {
     queryKey: [EQueryKeys.USER, user?.uid],
     queryFn: async () => {
       try {
-        const userDocRef = doc(db, EFirestoreCollections.USERS, user!.uid);
+        const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, user!.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (!userDocSnap.exists()) {

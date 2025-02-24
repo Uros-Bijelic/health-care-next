@@ -1,5 +1,6 @@
-import { UserProfileSchema } from '@/app/(root)/profile/edit/page';
-import { updateUser } from '@/lib/actions/mutations';
+// import { UserProfileSchema } from '@/app/(root)/profile/edit/page';
+import { UserProfileSchema } from '@/components/features/user/ProfileEdit';
+import { updateUser } from '@/lib/actions/server/users';
 import { EQueryKeys } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
