@@ -23,7 +23,7 @@ export const NAVIGATION_OPTIONS = [
     icon: FilePlus,
   },
   {
-    href: '/profile-edit',
+    href: '/profile/edit',
     label: 'Edit Profile',
     icon: UserRoundPenIcon,
   },

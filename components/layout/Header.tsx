@@ -17,19 +17,18 @@ import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';
 
+const getUserInitials = (userFirstName?: string, userLastName?: string, userName?: string) => {
+  if (userFirstName && userLastName) {
+    return userFirstName.charAt(0) + userLastName.charAt(0);
+  }
+
+  return userName?.charAt(0) || '';
+};
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // TODO: define type for data (User)
-  const { data, isPending } = useFetchUser();
-
-  let initials = '';
-
-  if (data?.firstName && data?.lastName) {
-    initials = data.firstName.charAt(0) + data.lastName.charAt(0);
-  } else {
-    initials = data?.userName?.charAt(0) || '';
-  }
+  const { data: user, isPending } = useFetchUser();
 
   if (isPending) {
     return <SpinningLoader asOverlay />;
@@ -42,9 +41,9 @@ const Header = () => {
       </Link>
       <div className="flex items-center gap-2">
         <div className="flex-center size-[36px] rounded-full bg-cyan-500 text-white">
-          {initials}
+          {getUserInitials(user?.firstName, user?.lastName, user?.userName)}
         </div>
-        <p className="p3-medium">{data?.userName}</p>
+        <p className="p3-medium">{user?.userName}</p>
         <div className="flex-center lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
