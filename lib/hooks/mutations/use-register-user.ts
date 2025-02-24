@@ -1,4 +1,4 @@
-import { EFirestoreCollections, EUserRole } from '@/lib/constants';
+import { EUserRole, FIRESTORE_COLLECTIONS } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
 import {
   authErrorMessages,
@@ -26,7 +26,7 @@ export const useRegisterUser = () => {
 
         const response = await createUserWithEmailAndPassword(auth, email, password);
 
-        const userDocRef = doc(db, EFirestoreCollections.USERS, response.user.uid);
+        const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, response.user.uid);
 
         await setDoc(userDocRef, {
           id: response.user.uid,

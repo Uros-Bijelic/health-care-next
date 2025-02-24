@@ -1,18 +1,16 @@
 'use server';
 
-import { UserProfileSchema } from '@/app/(root)/profile/edit/page';
+import { UserProfileSchema } from '@/components/features/user/ProfileEdit';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import { doc, FirestoreError, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { EFirestoreCollections } from '../constants';
+import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
-
-// ----------------------------------------------------------------
 
 export const updateUser = async (data: UserProfileSchema, userId: string) => {
   const db = firebaseInstance.getDb();
 
   try {
-    const userDocRef = doc(db, EFirestoreCollections.USERS, userId);
+    const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId);
 
     await updateDoc(userDocRef, {
       ...data,
