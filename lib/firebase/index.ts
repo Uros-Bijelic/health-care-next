@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { getApp, getApps, initializeApp } from 'firebase/app';
 import { Auth, getAuth } from 'firebase/auth';
 import { Firestore, getFirestore } from 'firebase/firestore';
 
@@ -22,7 +22,7 @@ class FirestoreClass implements IFirestoreClass {
   private auth: Auth;
 
   constructor() {
-    const app = initializeApp(firebaseConfig);
+    const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     this.db = getFirestore(app);
     this.auth = getAuth(app);
   }

@@ -1,5 +1,7 @@
+import { typedFetch } from '@/lib/api';
 import { EUserRole, FIRESTORE_COLLECTIONS } from '@/lib/constants';
 import { firebaseInstance } from '@/lib/firebase';
+// import { firebaseInstance } from '@/lib/firebase';
 import {
   authErrorMessages,
   getAuthErrorMessage,
@@ -21,10 +23,19 @@ export const useRegisterUser = () => {
   return useMutation({
     mutationFn: async ({ password, userName, email, role }: IMutationFnArgs) => {
       try {
+        const APP_BASE_URL = process.env.LOCALHOST_API || '';
         const auth = firebaseInstance.getAuth();
         const db = firebaseInstance.getDb();
 
         const response = await createUserWithEmailAndPassword(auth, email, password);
+
+        const token = await response.user.getIdToken();
+
+        typedFetch({
+          url: `${APP_BASE_URL}/api/auth`,
+          method: 'POST',
+          body: { token },
+        });
 
         const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, response.user.uid);
 
