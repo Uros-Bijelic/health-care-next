@@ -29,7 +29,7 @@ export const useRegisterUser = () => {
 
         const response = await createUserWithEmailAndPassword(auth, email, password);
 
-        const token = await response.user.getIdToken();
+        const token = await response.user.getIdToken(true);
 
         typedFetch({
           url: `${APP_BASE_URL}/api/auth`,

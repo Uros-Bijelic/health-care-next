@@ -6,7 +6,7 @@ export const POST = async (req: NextRequest) => {
     const storeCookies = await cookies();
 
     const { token }: { token: string } = await req.json();
-    console.log('token U RUTI AUTH SAMO', token);
+    // console.log('token U RUTI AUTH SAMO', token);
 
     if (!token) {
       return NextResponse.json({ message: 'Token is required' }, { status: 400 });

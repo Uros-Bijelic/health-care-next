@@ -18,7 +18,7 @@ export const useLoginUser = () => {
         const auth = firebaseInstance.getAuth();
 
         const response = await signInWithEmailAndPassword(auth, email, password);
-        const token = await response.user.getIdToken();
+        const token = await response.user.getIdToken(true);
 
         await typedFetch({ url: `${APP_BASE_URL}/api/auth`, method: 'POST', body: { token } });
       } catch (error) {
