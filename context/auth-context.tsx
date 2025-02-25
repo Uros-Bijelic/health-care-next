@@ -1,7 +1,8 @@
 'use client';
 
+import { typedFetch } from '@/lib/api';
 import { firebaseInstance } from '@/lib/firebase';
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, onIdTokenChanged, signOut, type User } from 'firebase/auth';
 import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
@@ -49,6 +50,24 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       return () => unsubscribe();
     });
   }, [auth, pathName, router]);
+
+  useEffect(() => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
+      const APP_BASE_URL = process.env.LOCALHOST_API || '';
+      if (user) {
+        const token = await user?.getIdToken(true);
+        console.log('token', token);
+
+        typedFetch({
+          url: `${APP_BASE_URL}/api/auth`,
+          method: 'POST',
+          body: { token },
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   return <AuthContext.Provider value={{ user, signOutUser }}>{children}</AuthContext.Provider>;
 };
