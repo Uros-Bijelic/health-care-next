@@ -1,18 +1,16 @@
-// import { UserProfileSchema } from '@/app/(root)/profile/edit/page';
 import { UserProfileSchema } from '@/components/features/user/ProfileEdit';
-import { updateUser } from '@/lib/actions/server/users';
+import { updateUser } from '@/lib/actions/users';
 import { EQueryKeys } from '@/lib/constants';
-import { firebaseInstance } from '@/lib/firebase';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-// ----------------------------------------------------------------
+import { useSession } from 'next-auth/react';
 
 interface IMutationFnArgs {
   data: UserProfileSchema;
 }
 
 export const useUpdateUser = () => {
-  const userId = firebaseInstance.getAuth().currentUser?.uid ?? '';
+  const { data: session } = useSession();
+  const userId = session?.user?.id || '';
 
   const queryClent = useQueryClient();
 

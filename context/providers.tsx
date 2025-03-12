@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Toaster } from 'sonner';
-import AuthContextProvider from './auth-context';
+import SessionProvider from './next-auth-session-provider';
 import QueryClientProvider from './tanstack-query-context';
 
 type Props = {
@@ -11,12 +11,12 @@ type Props = {
 
 const Providers = ({ children }: Props) => {
   return (
-    <>
-      <Toaster />
+    <SessionProvider>
       <QueryClientProvider>
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <Toaster />
+        {children}
       </QueryClientProvider>
-    </>
+    </SessionProvider>
   );
 };
 

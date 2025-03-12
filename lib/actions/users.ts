@@ -1,10 +1,10 @@
 'use server';
 
 import { UserProfileSchema } from '@/components/features/user/ProfileEdit';
+import { FIRESTORE_COLLECTIONS } from '@/lib/constants';
+import { firebaseInstance } from '@/lib/firebase';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import { doc, FirestoreError, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { FIRESTORE_COLLECTIONS } from '../constants';
-import { firebaseInstance } from '../firebase';
 
 export const updateUser = async (data: UserProfileSchema, userId: string) => {
   const db = firebaseInstance.getDb();
