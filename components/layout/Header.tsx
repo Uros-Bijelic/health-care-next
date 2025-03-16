@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';
@@ -27,6 +28,9 @@ const getUserInitials = (userFirstName?: string, userLastName?: string, userName
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: session } = useSession();
+  console.log('session u headeru', session);
 
   const { data: user, isPending } = useFetchUser();
 
