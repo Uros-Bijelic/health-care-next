@@ -35,7 +35,7 @@ const SearchCommandDialog = ({ query, onQueryChange }: Props) => {
   return (
     <>
       <div
-        className="flex justify-between rounded-lg border-2 border-gray-200 px-2 py-1.5 transition-colors hover:border-cyan-500"
+        className="flex w-[max(260px,100%)] justify-between gap-4 rounded-lg border-2 border-gray-200 px-2 py-1.5 transition-colors hover:border-cyan-500"
         onClick={() => setOpen(true)}
       >
         <div className="flex gap-2">
