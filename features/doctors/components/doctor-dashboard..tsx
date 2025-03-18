@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const useDebounce = (value: string, timeout = 500) => {
   const [debouncedValue, setDebouncedValue] = useState('');
-  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (timeoutRef.current) {
@@ -16,7 +16,11 @@ const useDebounce = (value: string, timeout = 500) => {
       setDebouncedValue(value);
     }, timeout);
 
-    return () => clearTimeout(timeoutRef.current);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [timeout, value]);
 
   return debouncedValue;
