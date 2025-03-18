@@ -1,9 +1,14 @@
+import DoctorDashboard from '@/features/doctors/components/doctor-dashboard.';
+import UserDashboard from '@/features/users/components/user-dashboard';
+
+import { auth } from '@/auth';
+
 const Home = async () => {
-  return (
-    <div className="flex flex-wrap bg-cyan-400 p-5 px-3 py-2">
-      <h1>THIS IS HOME PAGE</h1>
-    </div>
-  );
+  const session = await auth();
+
+  const isDoctor = session?.user.role === 'doctor';
+
+  return isDoctor ? <DoctorDashboard /> : <UserDashboard />;
 };
 
 export default Home;
