@@ -13,7 +13,12 @@ import {
 import { useEffect, useState } from 'react';
 import { DialogTitle } from './dialog';
 
-const SearchCommandDialog = () => {
+type Props = {
+  query: string;
+  onQueryChange: (query: string) => void;
+};
+
+const SearchCommandDialog = ({ query, onQueryChange }: Props) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +50,11 @@ const SearchCommandDialog = () => {
       </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogTitle />
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput
+          placeholder="Type a command or search..."
+          value={query}
+          onValueChange={onQueryChange}
+        />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup>

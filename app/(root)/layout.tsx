@@ -14,7 +14,7 @@ const Layout = ({ children }: Props) => {
         <div className="max-lg:hidden">
           <Sidebar />
         </div>
-        <div className="w-full max-w-7xl p-2 sm:p-4">{children}</div>
+        <div className="mx-auto w-full max-w-7xl p-2 sm:p-4">{children}</div>
       </main>
     </div>
   );
