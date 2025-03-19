@@ -1,5 +1,5 @@
-import DoctorDashboard from '@/features/doctors/components/doctor-dashboard.';
-import UserDashboard from '@/features/users/components/user-dashboard';
+import DoctorDashboard from '@/components/features/doctors/doctor-dashboard.';
+import UserDashboard from '@/components/features/user/user-dashboard';
 
 import { auth } from '@/auth';
 
