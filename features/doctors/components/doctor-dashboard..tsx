@@ -22,19 +22,19 @@ const DoctorDashboard = () => {
           <div className="flex gap-4">
             <Link
               className="rounded-lg bg-cyan-500 px-3 py-1 text-white transition-colors hover:bg-cyan-400 md:px-4"
-              href="/record/create?examination"
+              href="/record/create?type=examination"
             >
               Examination
             </Link>
             <Link
               className="rounded-lg bg-cyan-500 px-2 py-1 text-white transition-colors hover:bg-cyan-400 md:px-4"
-              href="/record/create?vaccination"
+              href="/record/create?type=vaccination"
             >
               Vaccination
             </Link>
             <Link
               className="rounded-lg bg-cyan-500 px-2 py-1 text-white transition-colors hover:bg-cyan-400 md:px-4"
-              href="/record/create?medicine"
+              href="/record/create?type=medicine"
             >
               Medicine
             </Link>
