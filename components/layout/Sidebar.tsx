@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuthContext } from '@/context/auth-context';
 import {
   FilePlus,
   HomeIcon,
@@ -8,6 +7,7 @@ import {
   LogOutIcon,
   UserRoundPenIcon,
 } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 
@@ -30,8 +30,6 @@ export const NAVIGATION_OPTIONS = [
 ];
 
 const Sidebar = () => {
-  const { signOutUser } = useAuthContext();
-
   return (
     <div className="sticky left-0 top-[80px] flex h-[calc(100vh-80px)] flex-col gap-5 bg-cyan-500 p-5 text-white lg:w-[max(240px)]">
       <Link href="/" className="mt-2 flex items-center gap-1">
@@ -53,7 +51,7 @@ const Sidebar = () => {
       <ul className="mt-2">
         <li className="flex gap-2 transition hover:translate-x-2">
           <Button
-            onClick={signOutUser}
+            onClick={() => signOut({ redirectTo: '/login' })}
             className="text-md bg-transparent p-0 shadow-none hover:bg-transparent [&_svg]:size-auto"
           >
             <LogOutIcon /> Log out

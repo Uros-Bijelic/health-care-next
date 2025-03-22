@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app';
 import { Auth, getAuth } from 'firebase/auth';
 import { Firestore, getFirestore } from 'firebase/firestore';
 
@@ -15,16 +15,18 @@ const firebaseConfig = {
 interface IFirestoreClass {
   getDb(): Firestore;
   getAuth(): Auth;
+  getApp(): FirebaseApp;
 }
 
 class FirestoreClass implements IFirestoreClass {
   private db: Firestore;
   private auth: Auth;
+  private app: FirebaseApp;
 
   constructor() {
-    const app = initializeApp(firebaseConfig);
-    this.db = getFirestore(app);
-    this.auth = getAuth(app);
+    this.app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    this.db = getFirestore(this.app);
+    this.auth = getAuth(this.app);
   }
 
   public getDb() {
@@ -33,6 +35,10 @@ class FirestoreClass implements IFirestoreClass {
 
   public getAuth() {
     return this.auth;
+  }
+
+  public getApp() {
+    return this.app;
   }
 }
 

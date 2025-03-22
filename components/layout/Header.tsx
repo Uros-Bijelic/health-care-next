@@ -1,6 +1,5 @@
 'use client';
 
-import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
 import { CircleXIcon, MenuIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
 import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';

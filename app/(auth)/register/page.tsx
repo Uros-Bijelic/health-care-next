@@ -5,6 +5,7 @@ import RHFInput from '@/components/ui/rhf-inputs/rhf-input';
 import RHFSelect from '@/components/ui/rhf-inputs/rhf-select';
 import { useRegisterUser } from '@/lib/hooks/mutations/use-register-user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -52,8 +53,9 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterFormSchema) => {
     await registerUserAsync(data, {
-      onSuccess() {
+      async onSuccess() {
         toast.success('You have registered successfully');
+        await signIn('credentials', { ...data, redirectTo: '/' });
       },
     });
   };
