@@ -11,7 +11,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { useEffect, useState } from 'react';
-import { DialogTitle } from './dialog';
+import { DialogDescription, DialogTitle } from './dialog';
 
 type Props = {
   query: string;
@@ -50,6 +50,7 @@ const SearchCommandDialog = ({ query, onQueryChange }: Props) => {
       </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogTitle />
+        <DialogDescription />
         <CommandInput
           placeholder="Type a command or search..."
           value={query}

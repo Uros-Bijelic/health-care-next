@@ -30,22 +30,24 @@ export const userProfileSchema = z.object({
   }),
 });
 
-export type UserProfileSchema = z.infer<typeof userProfileSchema>;
+export type UserProfile = z.infer<typeof userProfileSchema>;
 
 export const userProfileSchemaDTO = userProfileSchema.extend({
-  id: z.string().trim(),
+  id: z.string().trim().min(1, 'Required'),
+  doctorId: z.string().trim().min(1, 'Required'),
   createdAt: z.instanceof(Timestamp),
   updatedAt: z.instanceof(Timestamp),
   birthDate: z.instanceof(Timestamp).optional(),
+  lastVisitedData: z.instanceof(Timestamp),
 });
 
-export type UserProfileSchemaDTO = z.infer<typeof userProfileSchemaDTO>;
+export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;
 
 const ProfileEdit = () => {
   const { data: userData, isPending, error: userDataError } = useFetchUser();
   const { mutateAsync: updateUserAsync } = useUpdateUser();
 
-  const form = useForm<UserProfileSchema>({
+  const form = useForm<UserProfile>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
       firstName: '',
@@ -86,7 +88,7 @@ const ProfileEdit = () => {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit = async (data: UserProfileSchema) => {
+  const onSubmit = async (data: UserProfile) => {
     await updateUserAsync(
       { data },
       {
