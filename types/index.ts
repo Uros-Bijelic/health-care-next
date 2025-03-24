@@ -21,4 +21,6 @@ export type UserProfileDTO = {
   profileImg?: string | undefined;
   allergies?: string | undefined;
   specialNotes?: string | undefined;
+  treatingPatients?: string[];
+  myDoctors?: string[];
 };

@@ -40,6 +40,8 @@ export const userProfileSchemaDTO = userProfileSchema.extend({
   updatedAt: z.instanceof(Timestamp),
   birthDate: z.instanceof(Timestamp).optional(),
   lastVisitedData: z.instanceof(Timestamp),
+  treatingPatients: z.array(z.string()).optional(),
+  myDoctors: z.array(z.string()).optional(),
 });
 
 export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;
