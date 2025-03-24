@@ -17,10 +17,10 @@ export type UserProfileDTO = {
   };
   doctorsTreatedBy: string[];
   lastVisitedDate: Timestamp;
-  birthDate?: Date | undefined;
-  profileImg?: string | undefined;
-  allergies?: string | undefined;
-  specialNotes?: string | undefined;
-  treatingPatients?: string[];
-  myDoctors?: string[];
+  birthDate?: Date | null;
+  profileImg?: string | null;
+  allergies?: string | null;
+  specialNotes?: string | null;
+  treatingPatients?: string[] | null;
+  myDoctors?: string[] | null;
 };
