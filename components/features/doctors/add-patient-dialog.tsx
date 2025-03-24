@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { CommandItem } from '@/components/ui/command';
 import {
   Dialog,
   DialogClose,
@@ -16,6 +17,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 // import { useDebounce } from '@/hooks/use-debounce';
 import { useFetchUsersWithLimit } from '@/lib/hooks/queries/use-fetch-users-with-limit';
 import { Label } from '@radix-ui/react-label';
+import { UserIcon } from 'lucide-react';
 import { useState } from 'react';
 
 const AddPatientDialog = () => {
@@ -28,7 +30,16 @@ const AddPatientDialog = () => {
 
   const { data: users } = useFetchUsersWithLimit({ query: debouncedQuery, limit: 10 });
 
-  console.log('users', users);
+  const searchCommandDialogContent = users?.map(({ id, firstName, lastName }) => {
+    return (
+      <CommandItem key={id} className="cursor-pointer">
+        <UserIcon />
+        <span>
+          {firstName} {lastName}
+        </span>
+      </CommandItem>
+    );
+  });
 
   return (
     <Dialog>
@@ -46,6 +57,7 @@ const AddPatientDialog = () => {
             query={query}
             onQueryChange={handleChangeQuery}
             placeholder="Click to search patient"
+            options={searchCommandDialogContent}
           />
         </div>
         <DialogFooter className="sm:justify-end">

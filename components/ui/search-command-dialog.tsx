@@ -1,17 +1,10 @@
 'use client';
 
-import { Calculator, Calendar, SearchIcon, Smile } from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
+import { CommandDialog, CommandGroup, CommandInput, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { DialogDescription, DialogTitle } from './dialog';
 
 type Props = {
@@ -19,6 +12,8 @@ type Props = {
   onQueryChange: (query: string) => void;
   placeholder?: string;
   className?: string;
+  options?: ReactNode;
+  groupHeadning?: string;
 };
 
 const SearchCommandDialog = ({
@@ -26,8 +21,12 @@ const SearchCommandDialog = ({
   onQueryChange,
   placeholder = 'Start searching for...',
   className,
+  options,
+  groupHeadning = '',
 }: Props) => {
   const [open, setOpen] = useState(false);
+
+  console.log('opetions', options);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -68,20 +67,8 @@ const SearchCommandDialog = ({
           onValueChange={onQueryChange}
         />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
-            <CommandItem>
-              <Calendar />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <Smile />
-              <span>Search Emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <Calculator />
-              <span>Calculator</span>
-            </CommandItem>
+          <CommandGroup heading={groupHeadning} forceMount>
+            {options}
           </CommandGroup>
         </CommandList>
       </CommandDialog>
@@ -90,12 +77,3 @@ const SearchCommandDialog = ({
 };
 
 export default SearchCommandDialog;
-
-{
-  /* <p className="text-sm text-muted-foreground">
-        Press{' '}
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">⌘</span>J
-        </kbd>
-      </p> */
-}

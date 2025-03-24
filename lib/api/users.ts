@@ -47,7 +47,6 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
         users.push(doc.data() as UserProfileDTO);
       }
     });
-    // console.log('filteredUsers BEFORE', filteredUsers);
 
     const filteredUsers = users.filter((user) => {
       try {
