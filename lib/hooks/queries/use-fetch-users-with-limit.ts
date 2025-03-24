@@ -9,8 +9,7 @@ type HookArgs = {
 
 export const useFetchUsersWithLimit = ({ query, limit = 10 }: HookArgs) => {
   return useQuery({
-    queryKey: [FIRESTORE_COLLECTIONS, query, limit],
+    queryKey: [FIRESTORE_COLLECTIONS, query],
     queryFn: () => fetchUsersWithLimit(query, limit),
-    enabled: !!query,
   });
 };

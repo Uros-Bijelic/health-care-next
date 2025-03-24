@@ -14,13 +14,14 @@ import {
 } from '@/components/ui/dialog';
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
 import { useDebounce } from '@/hooks/use-debounce';
-// import { useDebounce } from '@/hooks/use-debounce';
 import { useFetchUsersWithLimit } from '@/lib/hooks/queries/use-fetch-users-with-limit';
 import { Label } from '@radix-ui/react-label';
 import { UserIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const AddPatientDialog = () => {
+  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
+  const [patientId, setPatientId] = useState('');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query);
 
@@ -28,18 +29,35 @@ const AddPatientDialog = () => {
     setQuery(value);
   };
 
+  const handleToggleSearchDialog = useCallback(() => {
+    setIsSearchDialogOpen((open) => !open);
+    setPatientId('');
+  }, []);
+
   const { data: users } = useFetchUsersWithLimit({ query: debouncedQuery, limit: 10 });
 
-  const searchCommandDialogContent = users?.map(({ id, firstName, lastName }) => {
-    return (
-      <CommandItem key={id} className="cursor-pointer">
-        <UserIcon />
-        <span>
-          {firstName} {lastName}
-        </span>
-      </CommandItem>
-    );
-  });
+  const selectedPatient = users?.find((u) => u.id === patientId);
+  const nameToDisplay = `${selectedPatient?.firstName} ${selectedPatient?.lastName}`;
+
+  const searchCommandDialogContent = users?.length
+    ? users?.map(({ id, firstName, lastName }) => {
+        return (
+          <CommandItem
+            key={id}
+            className="cursor-pointer"
+            onSelect={() => {
+              setPatientId(id);
+              setIsSearchDialogOpen(false);
+            }}
+          >
+            <UserIcon />
+            <span>
+              {firstName} {lastName}
+            </span>
+          </CommandItem>
+        );
+      })
+    : null;
 
   return (
     <Dialog>
@@ -56,8 +74,12 @@ const AddPatientDialog = () => {
           <SearchCommandDialog
             query={query}
             onQueryChange={handleChangeQuery}
+            onToggleDialog={handleToggleSearchDialog}
+            isOpen={isSearchDialogOpen}
+            onOpen={setIsSearchDialogOpen}
             placeholder="Click to search patient"
             options={searchCommandDialogContent}
+            value={nameToDisplay}
           />
         </div>
         <DialogFooter className="sm:justify-end">
@@ -66,7 +88,7 @@ const AddPatientDialog = () => {
               Close
             </Button>
           </DialogClose>
-          <Button type="submit" className="text-white">
+          <Button type="submit" className="text-white" disabled={!patientId}>
             Add Patient
           </Button>
         </DialogFooter>

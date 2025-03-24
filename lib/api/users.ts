@@ -29,7 +29,6 @@ export const getCurrentUser = async (userId: string) => {
 
 export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10) => {
   try {
-    console.log('searchQuery', searchQuery);
     const db = firebaseInstance.getDb();
     const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS);
     const q = query(usersRef, where('role', '==', 'user'), limit(limitAmount));
@@ -49,20 +48,14 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
     });
 
     const filteredUsers = users.filter((user) => {
-      try {
-        const queryLowerCase = searchQuery.toLowerCase();
+      const queryLowerCase = searchQuery.toLowerCase();
 
-        return (
-          (user.userName != null && user.userName.toLowerCase().includes(queryLowerCase)) ||
-          (user.firstName !== null && user.firstName.toLowerCase().includes(queryLowerCase)) ||
-          (user.lastName !== null && user.lastName.toLowerCase().includes(queryLowerCase))
-        );
-      } catch (error) {
-        console.log('ERROR IN FILTER FUNCTION ', error);
-      }
+      return (
+        (user.userName != null && user.userName.toLowerCase().includes(queryLowerCase)) ||
+        (user.firstName !== null && user.firstName.toLowerCase().includes(queryLowerCase)) ||
+        (user.lastName !== null && user.lastName.toLowerCase().includes(queryLowerCase))
+      );
     });
-
-    console.log('AFTER');
 
     return filteredUsers;
   } catch (error) {
