@@ -35,6 +35,7 @@ export type UserProfile = z.infer<typeof userProfileSchema>;
 export const userProfileSchemaDTO = userProfileSchema.extend({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
+  role: z.enum(['user', 'doctor']),
   createdAt: z.instanceof(Timestamp),
   updatedAt: z.instanceof(Timestamp),
   birthDate: z.instanceof(Timestamp).optional(),

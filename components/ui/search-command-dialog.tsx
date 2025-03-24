@@ -10,15 +10,23 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { DialogDescription, DialogTitle } from './dialog';
 
 type Props = {
   query: string;
   onQueryChange: (query: string) => void;
+  placeholder?: string;
+  className?: string;
 };
 
-const SearchCommandDialog = ({ query, onQueryChange }: Props) => {
+const SearchCommandDialog = ({
+  query,
+  onQueryChange,
+  placeholder = 'Start searching for...',
+  className,
+}: Props) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -35,14 +43,17 @@ const SearchCommandDialog = ({ query, onQueryChange }: Props) => {
   return (
     <>
       <div
-        className="flex w-[max(260px,100%)] justify-between gap-4 rounded-lg border-2 border-gray-200 px-2 py-1.5 transition-colors hover:border-cyan-500"
+        className={cn(
+          `flex flex-1 shrink-0 justify-between gap-4 rounded-lg border-2 border-gray-200 px-2 py-1.5 transition-colors hover:border-cyan-500`,
+          className,
+        )}
         onClick={() => setOpen(true)}
       >
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <SearchIcon />
-          <p>Start searching for...</p>
+          <p>{placeholder}</p>
         </div>
-        <div>
+        <div className="flex shrink-0">
           <kbd className="pointer-events-none inline-flex select-none items-center gap-1 rounded bg-gray-300 px-1.5 font-mono text-[10px] font-medium">
             <span className="flex-center text-base text-gray-700">⌘ + K</span>
           </kbd>
