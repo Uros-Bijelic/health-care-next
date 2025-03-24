@@ -1,7 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { CommandItem } from '@/components/ui/command';
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import {
   Dialog,
   DialogClose,
@@ -12,52 +18,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import SearchCommandDialog from '@/components/ui/search-command-dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useFetchUsersWithLimit } from '@/lib/hooks/queries/use-fetch-users-with-limit';
-import { Label } from '@radix-ui/react-label';
-import { UserIcon } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { CheckIcon, ChevronsUpDown } from 'lucide-react';
+import { useState } from 'react';
 
 const AddPatientDialog = () => {
-  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
   const [patientId, setPatientId] = useState('');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query);
+  const [open, setOpen] = useState(false);
 
   const handleChangeQuery = (value: string) => {
     setQuery(value);
   };
 
-  const handleToggleSearchDialog = useCallback(() => {
-    setIsSearchDialogOpen((open) => !open);
-    setPatientId('');
-  }, []);
-
   const { data: users } = useFetchUsersWithLimit({ query: debouncedQuery, limit: 10 });
 
   const selectedPatient = users?.find((u) => u.id === patientId);
   const nameToDisplay = `${selectedPatient?.firstName} ${selectedPatient?.lastName}`;
-
-  const searchCommandDialogContent = users?.length
-    ? users?.map(({ id, firstName, lastName }) => {
-        return (
-          <CommandItem
-            key={id}
-            className="cursor-pointer"
-            onSelect={() => {
-              setPatientId(id);
-              setIsSearchDialogOpen(false);
-            }}
-          >
-            <UserIcon />
-            <span>
-              {firstName} {lastName}
-            </span>
-          </CommandItem>
-        );
-      })
-    : null;
 
   return (
     <Dialog>
@@ -70,17 +51,54 @@ const AddPatientDialog = () => {
           <DialogDescription />
         </DialogHeader>
         <div className="flex items-center gap-2">
-          <Label>Patient</Label>
-          <SearchCommandDialog
-            query={query}
-            onQueryChange={handleChangeQuery}
-            onToggleDialog={handleToggleSearchDialog}
-            isOpen={isSearchDialogOpen}
-            onOpen={setIsSearchDialogOpen}
-            placeholder="Click to search patient"
-            options={searchCommandDialogContent}
-            value={nameToDisplay}
-          />
+          <span>Patient</span>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-between"
+              >
+                {patientId ? nameToDisplay : 'Select User...'}
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-0" side="bottom" align="end">
+              <Command>
+                <CommandInput
+                  value={query}
+                  onValueChange={handleChangeQuery}
+                  placeholder="Choose patient..."
+                />
+                <CommandList>
+                  <CommandGroup forceMount>
+                    {users?.length
+                      ? users?.map(({ id, firstName, lastName }) => (
+                          <CommandItem
+                            key={id}
+                            value={id}
+                            onSelect={(currentValue) => {
+                              console.log('current value:', currentValue);
+                              setPatientId(currentValue === patientId ? '' : currentValue);
+                              setOpen(false);
+                            }}
+                          >
+                            {firstName} {lastName}
+                            <CheckIcon
+                              className={cn(
+                                'ml-auto',
+                                patientId === id ? 'opacity-100' : 'opacity-0',
+                              )}
+                            />
+                          </CommandItem>
+                        ))
+                      : null}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild>
@@ -88,7 +106,11 @@ const AddPatientDialog = () => {
               Close
             </Button>
           </DialogClose>
-          <Button type="submit" className="text-white" disabled={!patientId}>
+          <Button
+            type="submit"
+            className="text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-800"
+            disabled={!patientId}
+          >
             Add Patient
           </Button>
         </DialogFooter>
