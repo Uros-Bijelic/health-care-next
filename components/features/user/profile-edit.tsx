@@ -32,6 +32,12 @@ export const userProfileSchema = z.object({
 
 export type UserProfile = z.infer<typeof userProfileSchema>;
 
+const documentReferenceSchema = z
+  .object({
+    id: z.string(),
+  })
+  .passthrough();
+
 export const userProfileSchemaDTO = userProfileSchema.extend({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
@@ -40,8 +46,8 @@ export const userProfileSchemaDTO = userProfileSchema.extend({
   updatedAt: z.instanceof(Timestamp),
   birthDate: z.instanceof(Timestamp).optional(),
   lastVisitedData: z.instanceof(Timestamp),
-  treatingPatients: z.array(z.string()).optional(),
-  myDoctors: z.array(z.string()).optional(),
+  userRefs: z.array(documentReferenceSchema),
+  doctorRefs: z.array(documentReferenceSchema),
 });
 
 export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;

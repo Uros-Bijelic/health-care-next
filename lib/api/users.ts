@@ -1,6 +1,16 @@
 import { UserProfileDTO } from '@/components/features/user/profile-edit';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
-import { collection, FirestoreError, getDocs, limit, query, where } from 'firebase/firestore';
+import {
+  arrayUnion,
+  collection,
+  doc,
+  FirestoreError,
+  getDocs,
+  limit,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
 
@@ -64,5 +74,24 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
       throw new Error(errorMessage);
     }
     throw new Error('An unexpected error occurred');
+  }
+};
+
+export const addPatient = async (patientId: string, doctorId: string | undefined) => {
+  if (!doctorId) return;
+
+  try {
+    const db = firebaseInstance.getDb();
+    const doctorRef = doc(db, FIRESTORE_COLLECTIONS.USERS, doctorId);
+    const patientRef = doc(db, FIRESTORE_COLLECTIONS.USERS, patientId);
+
+    await updateDoc(doctorRef, {
+      userRefs: arrayUnion(patientRef),
+    });
+  } catch (error) {
+    if (error instanceof FirestoreError) {
+      const errorMessage = getFirestoreErrorMessage(error.code);
+      throw new Error(errorMessage);
+    }
   }
 };

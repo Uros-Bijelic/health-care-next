@@ -6,5 +6,6 @@ export enum EQueryKeys {
 
 export const FIRESTORE_COLLECTIONS = {
   USERS: 'users',
+  DOCTOR_PATIENTS: 'doctor_patients',
   MEDICAL_EXAMINATIONS: 'medical_examinations',
 };
