@@ -1,47 +1,21 @@
 'use client';
 
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
+import { useFetchPatients } from '@/lib/hooks/queries/use-fetch-patients';
 import { useState } from 'react';
 import AddPatientDialog from './add-patient-dialog';
 
 const DoctorDashboard = () => {
   const [query, setQuery] = useState('');
-  // const debouncedQuery = useDebounce(query);
   // // const db = firebaseInstance.getDb();
 
   const handleChangeQuery = (query: string) => {
     setQuery(query);
   };
 
-  // const { data: usersData } = useQuery({
-  //   queryKey: [FIRESTORE_COLLECTIONS.USERS],
-  //   queryFn: async () => {
-  //     try {
-  //       const usersCollection = collection(db, FIRESTORE_COLLECTIONS.USERS);
-  //       const usersSnapshots = await getDocs(usersCollection);
+  const { data: user } = useFetchPatients();
 
-  //       const users: UserProfileDTO[] = [];
-
-  //       usersSnapshots.forEach((doc) => {
-  //         if (doc.exists()) {
-  //           console.log('USER DOC', doc.data());
-  //           users.push(doc.data() as UserProfileDTO);
-
-  //           console.log('users', users);
-  //           console.log('debouncedQuery', debouncedQuery);
-  //         }
-  //       });
-
-  //       return users;
-  //     } catch (error) {
-  //       if (error instanceof FirestoreError) {
-  //         const errorMessage = getFirestoreErrorMessage(error.code);
-  //         throw new Error(errorMessage);
-  //       }
-  //     }
-  //   },
-  //   enabled: !!debouncedQuery,
-  // });
+  console.log('user', user);
 
   return (
     <div className="flex flex-col gap-4">

@@ -23,4 +23,5 @@ export type UserProfileDTO = {
   specialNotes?: string | null;
   patientsRefs?: string[] | null;
   doctorRefs?: string[] | null;
+  patients: UserProfileDTO[];
 };

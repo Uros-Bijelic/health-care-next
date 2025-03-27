@@ -135,7 +135,7 @@ const AddPatientDialog = () => {
                                   {firstName} {lastName}
                                   <CheckIcon
                                     className={cn(
-                                      'ml-auto',
+                                      'ml-auto text-cyan-500',
                                       patientId === id ? 'opacity-100' : 'opacity-0',
                                     )}
                                   />

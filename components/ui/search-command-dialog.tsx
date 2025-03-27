@@ -10,9 +10,9 @@ import { DialogDescription, DialogTitle } from './dialog';
 type Props = {
   query: string;
   onQueryChange: (query: string) => void;
-  onToggleDialog: () => void;
-  isOpen: boolean;
-  onOpen: (open: boolean) => void;
+  // onToggleDialog: () => void;
+  // isOpen: boolean;
+  // onOpen: (open: boolean) => void;
   placeholder?: string;
   className?: string;
   options?: ReactNode;
@@ -23,7 +23,7 @@ type Props = {
 const SearchCommandDialog = ({
   query,
   onQueryChange,
-  onToggleDialog,
+  // onToggleDialog,
   // isOpen,
   // onOpen,
   placeholder = 'Start searching for...',
@@ -37,12 +37,12 @@ const SearchCommandDialog = ({
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        onToggleDialog();
+        setIsOpen((open) => !open);
       }
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, [onToggleDialog]);
+  }, []);
 
   return (
     <>

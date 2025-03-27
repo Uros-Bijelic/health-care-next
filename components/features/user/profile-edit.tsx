@@ -38,6 +38,8 @@ const documentReferenceSchema = z
   })
   .passthrough();
 
+export type DocumentReferenceSchema = z.infer<typeof documentReferenceSchema>;
+
 export const userProfileSchemaDTO = userProfileSchema.extend({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
@@ -51,6 +53,12 @@ export const userProfileSchemaDTO = userProfileSchema.extend({
 });
 
 export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;
+
+export const userProfileSchemaWithPatients = userProfileSchemaDTO.extend({
+  patients: z.array(userProfileSchemaDTO),
+});
+
+export type UserProfileWithPatientsDTO = z.infer<typeof userProfileSchemaWithPatients>;
 
 const ProfileEdit = () => {
   const { data: userData, isPending, error: userDataError } = useFetchUser();
