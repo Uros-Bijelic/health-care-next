@@ -1,24 +1,59 @@
-import { DocumentReferenceSchema, UserProfileDTO } from '@/components/features/user/profile-edit';
+import {
+  DocumentReferenceSchema,
+  type UserProfileDTO,
+  type UserProfileResponse,
+} from '@/components/features/user/profile-edit';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import {
   arrayUnion,
   collection,
   doc,
+  FirestoreDataConverter,
   FirestoreError,
   getDoc,
   getDocs,
   limit,
   query,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  Timestamp,
   updateDoc,
   where,
 } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
 
-export const getCurrentUser = async (userId: string) => {
+// * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
+const userProfileDataConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
+  toFirestore: (user: UserProfileDTO): UserProfileResponse => {
+    // Convert Dates back to Timestamps when writing to Firestore
+    return {
+      ...user,
+      createdAt: Timestamp.fromDate(user.createdAt),
+      updatedAt: Timestamp.fromDate(user.updatedAt),
+      birthDate: user.birthDate ? Timestamp.fromDate(user.birthDate) : undefined,
+      lastVisitedDate: user.lastVisitedDate ? Timestamp.fromDate(user.lastVisitedDate) : undefined,
+    };
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): UserProfileDTO => {
+    const data = snapshot.data(options) as UserProfileResponse;
+    // Convert Timestamps to Dates when reading from Firestore
+    return {
+      ...data,
+      createdAt: data.createdAt?.toDate(),
+      updatedAt: data.updatedAt?.toDate(),
+      lastVisitedDate: data.lastVisitedDate?.toDate(),
+      birthDate: data.birthDate?.toDate(),
+    };
+  },
+};
+
+export const fetchCurrentUser = async (userId: string) => {
   try {
     const db = firebaseInstance.getDb();
-    const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS);
+    const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS).withConverter(
+      userProfileDataConverter,
+    );
     const q = query(usersRef, where('id', '==', userId), limit(1));
 
     const querySnapshot = await getDocs(q);
@@ -64,7 +99,7 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
 
     const querySnapshot = await getDocs(q);
 
-    const users: UserProfileDTO[] = [];
+    const usersResponse: UserProfileDTO[] = [];
 
     if (querySnapshot.empty) {
       throw new Error('User data not found!');
@@ -72,11 +107,11 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
 
     querySnapshot.forEach((doc) => {
       if (doc.exists()) {
-        users.push(doc.data() as UserProfileDTO);
+        usersResponse.push(doc.data() as UserProfileDTO);
       }
     });
 
-    const filteredUsers = users.filter((user) => {
+    const filteredUsers = usersResponse.filter((user) => {
       const queryLowerCase = searchQuery.toLowerCase();
       const firstName = user.firstName ? user.firstName.toLowerCase() : '';
       const lastName = user.lastName ? user.lastName.toLowerCase() : '';
@@ -119,7 +154,9 @@ export const addPatient = async (patientId: string, doctorId: string | undefined
 export const fetchDoctorPatients = async (userId: string) => {
   try {
     const db = firebaseInstance.getDb();
-    const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId);
+    const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId).withConverter(
+      userProfileDataConverter,
+    );
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
@@ -129,7 +166,10 @@ export const fetchDoctorPatients = async (userId: string) => {
     const userDocUserRefs = userDoc.data().userRefs as DocumentReferenceSchema[];
 
     const patientsDocsToFetch = userDocUserRefs.map(({ id }) => {
-      return getDoc(doc(db, FIRESTORE_COLLECTIONS.USERS, id));
+      const patientsDocsRef = doc(db, FIRESTORE_COLLECTIONS.USERS, id).withConverter(
+        userProfileDataConverter,
+      );
+      return getDoc(patientsDocsRef);
     });
 
     const patientDocs = await Promise.all([...patientsDocsToFetch]);

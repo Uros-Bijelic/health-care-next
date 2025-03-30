@@ -1,13 +1,12 @@
-export type EUserRole = 'user' | 'doctor';
+'use client';
 
-export enum EQueryKeys {
-  USER = 'user',
-}
-
-export const FIRESTORE_COLLECTIONS = {
-  USERS: 'users',
-  DOCTOR_PATIENTS: 'doctor_patients',
-  MEDICAL_EXAMINATIONS: 'medical_examinations',
+// This type is used to define the shape of our data.
+// You can use a Zod schema here if you want.
+export type Payment = {
+  id: string;
+  amount: number;
+  status: 'pending' | 'processing' | 'success' | 'failed';
+  email: string;
 };
 
 export const patients = [
@@ -44,6 +43,4 @@ export const patients = [
     updatedAt: { seconds: 1742208375, nanoseconds: 449000000 },
     createdAt: { seconds: 1742208375, nanoseconds: 449000000 },
   },
-
-  // ...
 ];

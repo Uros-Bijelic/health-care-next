@@ -1,7 +1,7 @@
 'use client';
 
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
-import { useFetchPatients } from '@/lib/hooks/queries/use-fetch-patients';
+import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-patients';
 import { useState } from 'react';
 import AddPatientDialog from './add-patient-dialog';
 
@@ -13,7 +13,7 @@ const DoctorDashboard = () => {
     setQuery(query);
   };
 
-  const { data: user } = useFetchPatients();
+  const { data: user } = useFetchDoctorPatients();
 
   console.log('user', user);
 
@@ -27,6 +27,7 @@ const DoctorDashboard = () => {
           <AddPatientDialog />
         </div>
       </div>
+      TABELA
     </div>
   );
 };

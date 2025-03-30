@@ -40,22 +40,31 @@ const documentReferenceSchema = z
 
 export type DocumentReferenceSchema = z.infer<typeof documentReferenceSchema>;
 
-export const userProfileSchemaDTO = userProfileSchema.extend({
+export const userProfileSchemaResponse = userProfileSchema.extend({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
   role: z.enum(['user', 'doctor']),
   createdAt: z.instanceof(Timestamp),
   updatedAt: z.instanceof(Timestamp),
   birthDate: z.instanceof(Timestamp).optional(),
-  lastVisitedData: z.instanceof(Timestamp),
+  lastVisitedDate: z.instanceof(Timestamp).optional(),
   userRefs: z.array(documentReferenceSchema),
   doctorRefs: z.array(documentReferenceSchema),
 });
 
+export type UserProfileResponse = z.infer<typeof userProfileSchemaResponse>;
+
+export const userProfileSchemaDTO = userProfileSchemaResponse.extend({
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  birthDate: z.date().optional(),
+  lastVisitedDate: z.date().optional(),
+});
+
 export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;
 
-export const userProfileSchemaWithPatients = userProfileSchemaDTO.extend({
-  patients: z.array(userProfileSchemaDTO),
+export const userProfileSchemaWithPatients = userProfileSchemaResponse.extend({
+  patients: z.array(userProfileSchemaResponse),
 });
 
 export type UserProfileWithPatientsDTO = z.infer<typeof userProfileSchemaWithPatients>;
@@ -87,7 +96,7 @@ const ProfileEdit = () => {
       lastName: userData?.lastName || '',
       userName: userData?.userName || '',
       email: userData?.email || '',
-      birthDate: userData?.birthDate?.toDate() || undefined,
+      birthDate: userData?.birthDate || undefined,
       allergies: userData?.allergies || '',
       profileImg: userData?.profileImg || '',
       specialNotes: userData?.specialNotes || '',

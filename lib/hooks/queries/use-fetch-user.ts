@@ -1,5 +1,5 @@
 import { UserProfileDTO } from '@/components/features/user/profile-edit';
-import { getCurrentUser } from '@/lib/api/users';
+import { fetchCurrentUser } from '@/lib/api/users';
 import { EQueryKeys } from '@/lib/constants';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -9,7 +9,7 @@ export const useFetchUser = () => {
 
   return useQuery<Partial<UserProfileDTO>>({
     queryKey: [EQueryKeys.USER, session?.user?.id],
-    queryFn: () => getCurrentUser(session?.user?.id || ''),
+    queryFn: () => fetchCurrentUser(session?.user?.id || ''),
     enabled: !!session?.user?.id,
   });
 };
