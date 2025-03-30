@@ -1,21 +1,17 @@
 'use client';
 
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
-import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-patients';
 import { useState } from 'react';
 import AddPatientDialog from './add-patient-dialog';
 
 const DoctorDashboard = () => {
   const [query, setQuery] = useState('');
-  // // const db = firebaseInstance.getDb();
 
   const handleChangeQuery = (query: string) => {
     setQuery(query);
   };
 
-  const { data: user } = useFetchDoctorPatients();
-
-  console.log('user', user);
+  // /  const { data: user } = useFetchDoctorPatients();
 
   return (
     <div className="flex flex-col gap-4">

@@ -58,8 +58,6 @@ const AddPatientDialog = () => {
   const { data: users } = useFetchUsersWithLimit({ query: debouncedQuery, limit: 10 });
   const { mutateAsync: addPatientAsync } = useAddPatient();
 
-  // console.log('FETCH USERS WITH LIMIT TEST CONVERTER', users);
-
   const onSubmit = (data: AddPatientSchema) => {
     addPatientAsync(
       { patientId: data.patientId },
@@ -152,7 +150,7 @@ const AddPatientDialog = () => {
               </PopoverContent>
             </Popover>
           </div>
-          <DialogFooter className="sm:justify-end">
+          <DialogFooter className="flex gap-2 sm:justify-end">
             <DialogClose asChild>
               <Button className="text-white" type="button">
                 Close

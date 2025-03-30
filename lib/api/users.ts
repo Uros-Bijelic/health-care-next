@@ -24,7 +24,7 @@ import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
 
 // * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
-const userProfileDataConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
+const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
   toFirestore: (user: UserProfileDTO): UserProfileResponse => {
     // Convert Dates back to Timestamps when writing to Firestore
     return {
@@ -52,7 +52,7 @@ export const fetchCurrentUser = async (userId: string) => {
   try {
     const db = firebaseInstance.getDb();
     const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS).withConverter(
-      userProfileDataConverter,
+      userProfileConverter,
     );
     const q = query(usersRef, where('id', '==', userId), limit(1));
 
@@ -73,12 +73,15 @@ export const fetchCurrentUser = async (userId: string) => {
   }
 };
 
-export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10) => {
+export const fetchUsersWithLimit = async (
+  searchQuery: string,
+  limitAmount = 10,
+  userId: string,
+) => {
   try {
     const db = firebaseInstance.getDb();
-    const currentUserId = firebaseInstance.getAuth().currentUser?.uid as string;
 
-    const currentUserDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, currentUserId);
+    const currentUserDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId);
 
     const currentUser = await getDoc(currentUserDocRef);
 
@@ -90,7 +93,9 @@ export const fetchUsersWithLimit = async (searchQuery: string, limitAmount = 10)
       .data()
       .userRefs.map((userRef: DocumentReferenceSchema) => userRef.id);
 
-    const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS);
+    const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS).withConverter(
+      userProfileConverter,
+    );
     let q = query(usersRef, where('role', '==', 'user'));
 
     if (userAddedPatients.length) {
@@ -155,7 +160,7 @@ export const fetchDoctorPatients = async (userId: string) => {
   try {
     const db = firebaseInstance.getDb();
     const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId).withConverter(
-      userProfileDataConverter,
+      userProfileConverter,
     );
     const userDoc = await getDoc(userDocRef);
 
@@ -166,10 +171,7 @@ export const fetchDoctorPatients = async (userId: string) => {
     const userDocUserRefs = userDoc.data().userRefs as DocumentReferenceSchema[];
 
     const patientsDocsToFetch = userDocUserRefs.map(({ id }) => {
-      const patientsDocsRef = doc(db, FIRESTORE_COLLECTIONS.USERS, id).withConverter(
-        userProfileDataConverter,
-      );
-      return getDoc(patientsDocsRef);
+      return getDoc(doc(db, FIRESTORE_COLLECTIONS.USERS, id));
     });
 
     const patientDocs = await Promise.all([...patientsDocsToFetch]);
