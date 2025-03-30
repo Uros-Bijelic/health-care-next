@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const userProfileSchema = z.object({
-  userName: z.string().trim().min(3, 'Username is required and must be at least 3 characters long'),
   firstName: z.string().trim().min(1, 'First name is required'),
   lastName: z.string().trim().min(1, 'Last name is required'),
   birthDate: z.date({ required_error: 'Date of birth is required' }).optional(),
@@ -78,7 +77,6 @@ const ProfileEdit = () => {
     defaultValues: {
       firstName: '',
       lastName: '',
-      userName: '',
       email: '',
       birthDate: undefined,
       allergies: '',
@@ -94,7 +92,6 @@ const ProfileEdit = () => {
     values: {
       firstName: userData?.firstName || '',
       lastName: userData?.lastName || '',
-      userName: userData?.userName || '',
       email: userData?.email || '',
       birthDate: userData?.birthDate || undefined,
       allergies: userData?.allergies || '',
@@ -143,7 +140,6 @@ const ProfileEdit = () => {
             <div className="flex flex-col gap-2">
               <RHFInput name="firstName" label="First Name" placeholder="First name" />
               <RHFInput name="lastName" label="Last Name" placeholder="Last name" />
-              <RHFInput name="userName" label="Userame" placeholder="Username" />
               <RHFInput name="email" label="Email" placeholder="Email" />
               <RHFShadcnDatePicker name="birthDate" label="Date of birth" chooseTime />
               <RHFTextarea name="allergies" placeholder="Allergies" label="Allergies" />

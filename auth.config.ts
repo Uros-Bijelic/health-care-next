@@ -27,7 +27,8 @@ export const AUTH_CONFIG = {
             user = {
               id: doc.data().id,
               email: doc.data().email,
-              userName: doc.data().userName,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
               role: doc.data().role,
             };
           }

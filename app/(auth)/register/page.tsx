@@ -27,7 +27,8 @@ const USER_APP_ROLES = [
 const registerFormSchema = z.object({
   email: z.string().trim().email('Please enter valid email address'),
   password: z.string().trim().min(6, 'Password must be at least 6 characters'),
-  userName: z.string().trim().min(1, 'Name is required'),
+  firstName: z.string().trim().min(1, 'First name is required'),
+  lastName: z.string().trim().min(1, 'Last name is required'),
   role: z.enum(['doctor', 'user'], { message: 'Please choose between doctor and user' }),
 });
 
@@ -39,7 +40,8 @@ const Register = () => {
     defaultValues: {
       email: '',
       password: '',
-      userName: '',
+      firstName: '',
+      lastName: '',
       role: undefined,
     },
   });
@@ -66,7 +68,8 @@ const Register = () => {
       {error && <p className="p1-medium text-center text-red-500">{error.message}</p>}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <RHFInput name="userName" type="text" label="Your Username" placeholder="UserName" />
+          <RHFInput name="firstName" type="text" label="Your First name" placeholder="First name" />
+          <RHFInput name="lastName" type="text" label="Your Last name" placeholder="last name" />
           <RHFInput name="email" type="email" label="Your Email" placeholder="Email" />
           <RHFInput name="password" type="password" label="Your Password" placeholder="Password" />
           <RHFSelect

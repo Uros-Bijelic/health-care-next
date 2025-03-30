@@ -5,7 +5,6 @@
 import { Timestamp } from 'firebase-admin/firestore';
 
 export type UserProfileDTO = {
-  userName: string;
   firstName: string;
   lastName: string;
   email: string;

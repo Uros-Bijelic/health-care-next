@@ -12,14 +12,13 @@ import { doc, FirestoreError, serverTimestamp, setDoc } from 'firebase/firestore
 
 interface IMutationFnArgs {
   password: string;
-  userName: string;
   email: string;
   role: EUserRole;
 }
 
 export const useRegisterUser = () => {
   return useMutation({
-    mutationFn: async ({ password, userName, email, role }: IMutationFnArgs) => {
+    mutationFn: async ({ password, email, role }: IMutationFnArgs) => {
       try {
         const auth = firebaseInstance.getAuth();
         const db = firebaseInstance.getDb();
@@ -30,7 +29,6 @@ export const useRegisterUser = () => {
 
         await setDoc(userDocRef, {
           id: response.user.uid,
-          userName,
           email,
           role,
           createdAt: serverTimestamp(),

@@ -12,7 +12,6 @@ export const FIRESTORE_COLLECTIONS = {
 
 export const patients = [
   {
-    userName: 'PeraKralj90',
     id: '3Vzqb08WYdMnvjFktXKsQvPNiAn2',
     doctorId: '25Y429fDcdSovEyKOZzB17wN2R43',
     email: 'test5@gmail.com',
@@ -23,7 +22,6 @@ export const patients = [
     createdAt: { seconds: 1742208375, nanoseconds: 449000000 },
   },
   {
-    userName: 'test user 10',
     id: 'LrgS3KFGiVPSqzT4plo80IoymZk1',
     doctorId: '25Y429fDcdSovEyKOZzB17wN2R43',
     email: 'test7@gmail.com',
@@ -34,7 +32,6 @@ export const patients = [
     createdAt: { seconds: 1742208438, nanoseconds: 427000000 },
   },
   {
-    userName: 'PeraKralj90',
     id: '3Vzqb08WYdMnvjFktXKsQvPNiAn2',
     doctorId: '25Y429fDcdSovEyKOZzB17wN2R43',
     email: 'test5@gmail.com',

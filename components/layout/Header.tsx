@@ -17,12 +17,12 @@ import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';
 
-const getUserInitials = (userFirstName?: string, userLastName?: string, userName?: string) => {
-  if (userFirstName && userLastName) {
-    return userFirstName.charAt(0) + userLastName.charAt(0);
+const getUserInitials = (userFirstName?: string, userLastName?: string) => {
+  if (!userFirstName || !userLastName) {
+    return 'N/A';
   }
 
-  return userName?.charAt(0) || '';
+  return userFirstName.charAt(0) + userLastName.charAt(0);
 };
 
 const Header = () => {
@@ -41,9 +41,8 @@ const Header = () => {
       </Link>
       <div className="flex items-center gap-2">
         <div className="flex-center size-[36px] rounded-full bg-cyan-500 text-white">
-          {getUserInitials(user?.firstName, user?.lastName, user?.userName)}
+          {getUserInitials(user?.firstName, user?.lastName)}
         </div>
-        <p className="p3-medium">{user?.userName}</p>
         <div className="flex-center lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
