@@ -4,11 +4,19 @@ import SearchCommandDialog from '@/components/ui/search-command-dialog';
 import DataTable from '@/components/ui/tables/data-table';
 import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-patients';
 import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import { useState } from 'react';
-import { UserProfileDTO } from '../user/profile-edit';
 import AddPatientDialog from './add-patient-dialog';
 
-const columns: ColumnDef<UserProfileDTO>[] = [
+type TableData = {
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  updatedAt: string;
+  lastVisitedDate: string;
+};
+
+const columns: ColumnDef<TableData>[] = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -40,16 +48,20 @@ const DoctorDashboard = () => {
 
   const { data: user } = useFetchDoctorPatients();
 
-  const tableColumns = user?.patients.map(
-    ({ id, firstName, lastName, createdAt, updatedAt, lastVisitedDate }) => ({
-      id,
-      firstName,
-      lastName,
-      createdAt,
-      updatedAt,
-      lastVisitedDate: lastVisitedDate || 'N/A',
-    }),
-  ) as ColumnDef<UserProfileDTO>[];
+  let tableData: TableData[] = [];
+
+  if (user) {
+    tableData = user?.patients.map(
+      ({ firstName, lastName, email, createdAt, updatedAt, lastVisitedDate }) => ({
+        firstName,
+        lastName,
+        email,
+        createdAt: format(new Date(createdAt), 'dd/MM/yyyy'),
+        updatedAt: format(new Date(updatedAt), 'dd/MM/yyyy'),
+        lastVisitedDate: lastVisitedDate ? format(new Date(lastVisitedDate), 'dd/MM/yyyy') : 'N/A',
+      }),
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -61,9 +73,9 @@ const DoctorDashboard = () => {
           <AddPatientDialog />
         </div>
       </div>
-      {tableColumns && (
+      {tableData && (
         <div>
-          <DataTable columns={columns} data={[]} />
+          <DataTable columns={columns} data={tableData} />
         </div>
       )}
     </div>
