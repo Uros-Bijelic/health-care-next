@@ -1,9 +1,5 @@
 'use client';
 
-import { CircleXIcon, MenuIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-
 import {
   Sheet,
   SheetClose,
@@ -13,6 +9,9 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
+import { CircleXIcon, MenuIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';
