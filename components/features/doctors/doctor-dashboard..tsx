@@ -11,7 +11,7 @@ const DoctorDashboard = () => {
     setQuery(query);
   };
 
-  // /  const { data: user } = useFetchDoctorPatients();
+  // const { data: user } = useFetchDoctorPatients();
 
   return (
     <div className="flex flex-col gap-4">
@@ -23,7 +23,7 @@ const DoctorDashboard = () => {
           <AddPatientDialog />
         </div>
       </div>
-      TABELA
+      <div>{/* <DataTable  /> */}</div>
     </div>
   );
 };

@@ -24,15 +24,19 @@ import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
 
 // * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
+
+// IZBACITI CONFERTOR PROBATI SA STRINGOVIMA I VIDETI GDE MI JE BACAO ERROR
 const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
   toFirestore: (user: UserProfileDTO): UserProfileResponse => {
     // Convert Dates back to Timestamps when writing to Firestore
     return {
       ...user,
-      createdAt: Timestamp.fromDate(user.createdAt),
-      updatedAt: Timestamp.fromDate(user.updatedAt),
-      birthDate: user.birthDate ? Timestamp.fromDate(user.birthDate) : undefined,
-      lastVisitedDate: user.lastVisitedDate ? Timestamp.fromDate(user.lastVisitedDate) : undefined,
+      createdAt: Timestamp.fromDate(new Date(user.createdAt)),
+      updatedAt: Timestamp.fromDate(new Date(user.updatedAt)),
+      birthDate: user.birthDate ? Timestamp.fromDate(new Date(user.birthDate)) : undefined,
+      lastVisitedDate: user.lastVisitedDate
+        ? Timestamp.fromDate(new Date(user.lastVisitedDate))
+        : undefined,
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): UserProfileDTO => {
@@ -40,10 +44,10 @@ const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileRe
     // Convert Timestamps to Dates when reading from Firestore
     return {
       ...data,
-      createdAt: data.createdAt?.toDate(),
-      updatedAt: data.updatedAt?.toDate(),
-      lastVisitedDate: data.lastVisitedDate?.toDate(),
-      birthDate: data.birthDate?.toDate(),
+      createdAt: data.createdAt?.toDate().toString(),
+      updatedAt: data.updatedAt?.toDate().toString(),
+      lastVisitedDate: data.lastVisitedDate?.toDate().toString(),
+      birthDate: data.birthDate?.toDate().toString(),
     };
   },
 };
@@ -96,6 +100,7 @@ export const fetchUsersWithLimit = async (
     const usersRef = collection(db, FIRESTORE_COLLECTIONS.USERS).withConverter(
       userProfileConverter,
     );
+
     let q = query(usersRef, where('role', '==', 'user'));
 
     if (userAddedPatients.length) {
@@ -171,7 +176,10 @@ export const fetchDoctorPatients = async (userId: string) => {
     const userDocUserRefs = userDoc.data().userRefs as DocumentReferenceSchema[];
 
     const patientsDocsToFetch = userDocUserRefs.map(({ id }) => {
-      return getDoc(doc(db, FIRESTORE_COLLECTIONS.USERS, id));
+      const patientDoctorRef = doc(db, FIRESTORE_COLLECTIONS.USERS, id).withConverter(
+        userProfileConverter,
+      );
+      return getDoc(patientDoctorRef);
     });
 
     const patientDocs = await Promise.all([...patientsDocsToFetch]);

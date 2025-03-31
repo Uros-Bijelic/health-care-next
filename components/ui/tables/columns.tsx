@@ -1,13 +1,7 @@
 'use client';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
+// import { ColumnDef } from "@tanstack/react-table"
+// import { UserProfileDTO } from "../../user/profile-edit";
 
 export const patients = [
   {
@@ -17,8 +11,8 @@ export const patients = [
     firstName: 'Petar',
     lastName: 'Peric',
     role: 'user',
-    updatedAt: { seconds: 1742208375, nanoseconds: 449000000 },
-    createdAt: { seconds: 1742208375, nanoseconds: 449000000 },
+    createdAt: new Date('Mon Mar 17 2025 11:46:15 GMT+0100 (Central European Standard Time)'),
+    updatedAt: new Date('Mon Mar 17 2025 11:46:15 GMT+0100 (Central European Standard Time)'),
   },
   {
     id: 'LrgS3KFGiVPSqzT4plo80IoymZk1',
@@ -27,8 +21,8 @@ export const patients = [
     firstName: 'Predrag',
     lastName: 'Rajkovic',
     role: 'user',
-    updatedAt: { seconds: 1742208509, nanoseconds: 852000000 },
-    createdAt: { seconds: 1742208438, nanoseconds: 427000000 },
+    createdAt: new Date('Mon Mar 17 2025 11:48:29 GMT+0100 (Central European Standard Time)'),
+    updatedAt: new Date('Mon Mar 17 2025 11:48:29 GMT+0100 (Central European Standard Time)'),
   },
   {
     id: '3Vzqb08WYdMnvjFktXKsQvPNiAn2',
@@ -37,7 +31,7 @@ export const patients = [
     firstName: 'Petar',
     lastName: 'Peric',
     role: 'user',
-    updatedAt: { seconds: 1742208375, nanoseconds: 449000000 },
-    createdAt: { seconds: 1742208375, nanoseconds: 449000000 },
+    createdAt: new Date('Mon Mar 17 2025 11:47:18 GMT+0100 (Central European Standard Time)'),
+    updatedAt: new Date('Mon Mar 17 2025 11:47:18 GMT+0100 (Central European Standard Time)'),
   },
 ];

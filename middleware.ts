@@ -9,6 +9,7 @@ const AUTH_ROUTES = ['/login', '/register'];
 export default auth((req) => {
   const isAuth = !!req.auth;
   const pathName = req.nextUrl.pathname;
+  // const isDoctor = req.auth?.user.role === 'doctor'; // use this later to check routes
 
   if (!isAuth) {
     if (!AUTH_ROUTES.includes(pathName)) {

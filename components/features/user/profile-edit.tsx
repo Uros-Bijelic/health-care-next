@@ -6,7 +6,7 @@ import RHFShadcnDatePicker from '@/components/ui/rhf-inputs/rhf-shadcn-date-pick
 import RHFTextarea from '@/components/ui/rhf-inputs/rhf-textarea';
 import SpinningLoader from '@/components/ui/SpinningLoader';
 import { useUpdateUser } from '@/lib/hooks/mutations/use-update-user';
-import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
+import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Timestamp } from 'firebase/firestore';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -54,10 +54,10 @@ export const userProfileSchemaResponse = userProfileSchema.extend({
 export type UserProfileResponse = z.infer<typeof userProfileSchemaResponse>;
 
 export const userProfileSchemaDTO = userProfileSchemaResponse.extend({
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  birthDate: z.date().optional(),
-  lastVisitedDate: z.date().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  birthDate: z.string().optional(),
+  lastVisitedDate: z.string().optional(),
 });
 
 export type UserProfileDTO = z.infer<typeof userProfileSchemaDTO>;
@@ -69,7 +69,7 @@ export const userProfileSchemaWithPatients = userProfileSchemaResponse.extend({
 export type UserProfileWithPatientsDTO = z.infer<typeof userProfileSchemaWithPatients>;
 
 const ProfileEdit = () => {
-  const { data: userData, isPending, error: userDataError } = useFetchUser();
+  const { data: userData, isPending, error: userDataError } = useFetchCurrentUser();
   const { mutateAsync: updateUserAsync } = useUpdateUser();
 
   const form = useForm<UserProfile>({
@@ -93,7 +93,7 @@ const ProfileEdit = () => {
       firstName: userData?.firstName || '',
       lastName: userData?.lastName || '',
       email: userData?.email || '',
-      birthDate: userData?.birthDate || undefined,
+      birthDate: userData?.birthDate ? new Date(userData?.birthDate) : undefined,
       allergies: userData?.allergies || '',
       profileImg: userData?.profileImg || '',
       specialNotes: userData?.specialNotes || '',

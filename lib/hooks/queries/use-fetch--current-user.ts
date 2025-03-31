@@ -4,7 +4,7 @@ import { EQueryKeys } from '@/lib/constants';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
-export const useFetchUser = () => {
+export const useFetchCurrentUser = () => {
   const { data: session } = useSession();
 
   return useQuery<Partial<UserProfileDTO>>({

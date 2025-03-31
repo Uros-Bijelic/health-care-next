@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
+import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
 import { useState } from 'react';
 import SpinningLoader from '../ui/SpinningLoader';
 import Sidebar from './Sidebar';
@@ -28,7 +28,7 @@ const getUserInitials = (userFirstName?: string, userLastName?: string) => {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: user, isPending } = useFetchUser();
+  const { data: user, isPending } = useFetchCurrentUser();
 
   if (isPending) {
     return <SpinningLoader asOverlay />;

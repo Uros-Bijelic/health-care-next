@@ -15,6 +15,9 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
+/**
+ * 1. Ovo treba da bude UI componenta reusable i treba da imam HOC koja ce da prosledjuje specific colone u odnosu na ono sta tabela treba da renderuje
+ */
 
 const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
