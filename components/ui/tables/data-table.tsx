@@ -1,6 +1,13 @@
 'use client';
 
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -10,20 +17,38 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  enableSorting?: boolean;
 }
 /**
  * 1. Ovo treba da bude UI componenta reusable i treba da imam HOC koja ce da prosledjuje specific colone u odnosu na ono sta tabela treba da renderuje
+ *
+ *
+ * ? Uradio sam ovako sa enableSorting i destructruing to enable sorting feature. Ne znam uopste da li je potrebana bilo kakva HOC componenta i ova logika koju sam implmenetirao???
  */
 
-const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({
+  columns,
+  data,
+  enableSorting = false,
+}: DataTableProps<TData, TValue>) => {
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    ...(enableSorting && {
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
+      state: {
+        sorting,
+      },
+    }),
   });
 
   return (

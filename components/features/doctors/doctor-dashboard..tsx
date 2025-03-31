@@ -1,10 +1,12 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
 import DataTable from '@/components/ui/tables/data-table';
 import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-patients';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { ArrowUpDownIcon } from 'lucide-react';
 import { useState } from 'react';
 import AddPatientDialog from './add-patient-dialog';
 
@@ -19,23 +21,93 @@ type TableData = {
 const columns: ColumnDef<TableData>[] = [
   {
     accessorKey: 'firstName',
-    header: 'First name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          First name
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'lastName',
-    header: 'Last name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Last name
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'email',
-    header: 'Email',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Email
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created at',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Created at
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Updated at
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'lastVisitedDate',
-    header: 'Last Visited',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Last Visited
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
 ];
 
@@ -56,8 +128,8 @@ const DoctorDashboard = () => {
         firstName,
         lastName,
         email,
-        createdAt: format(new Date(createdAt), 'dd/MM/yyyy'),
-        updatedAt: format(new Date(updatedAt), 'dd/MM/yyyy'),
+        createdAt: format(new Date(createdAt), 'dd/MMM/yyyy'),
+        updatedAt: format(new Date(updatedAt), 'dd/MMM/yyyy'),
         lastVisitedDate: lastVisitedDate ? format(new Date(lastVisitedDate), 'dd/MM/yyyy') : 'N/A',
       }),
     );
