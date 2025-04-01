@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   enableSorting?: boolean;
+  onRowClick?: (data: TData) => void;
 }
 /**
  * 1. Ovo treba da bude UI componenta reusable i treba da imam HOC koja ce da prosledjuje specific colone u odnosu na ono sta tabela treba da renderuje
@@ -35,6 +36,7 @@ const DataTable = <TData, TValue>({
   columns,
   data,
   enableSorting = false,
+  onRowClick,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -45,10 +47,10 @@ const DataTable = <TData, TValue>({
     ...(enableSorting && {
       onSortingChange: setSorting,
       getSortedRowModel: getSortedRowModel(),
-      state: {
-        sorting,
-      },
     }),
+    state: {
+      sorting,
+    },
   });
 
   return (
@@ -71,15 +73,22 @@ const DataTable = <TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => onRowClick?.(row.original)}
+                  className="cursor-pointer"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
