@@ -134,16 +134,7 @@ export const fetchUsersWithLimit = async (
       }
     });
 
-    const filteredUsers = users.filter((user) => {
-      const queryLowerCase = searchQuery.toLowerCase();
-      const firstName = user.firstName ? user.firstName.toLowerCase() : '';
-      const lastName = user.lastName ? user.lastName.toLowerCase() : '';
-
-      return (
-        firstName.toLowerCase().includes(queryLowerCase) ||
-        lastName.toLowerCase().includes(queryLowerCase)
-      );
-    });
+    const filteredUsers = filterUsersBySearchQuery(users, searchQuery);
 
     return filteredUsers;
   } catch (error) {
