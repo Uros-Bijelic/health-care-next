@@ -3,12 +3,15 @@
 
 import AddPatientDialog from '@/components/features/doctors/add-patient-dialog';
 import { Button } from '@/components/ui/button';
+import { CommandItem } from '@/components/ui/command';
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
 import DataTable from '@/components/ui/tables/data-table';
-import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-patients';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-doctor-patients';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ArrowUpDownIcon } from 'lucide-react';
+import { ArrowUpDownIcon, UserIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -117,18 +120,20 @@ const columns: ColumnDef<TableData>[] = [
 
 const DoctorHome = () => {
   const router = useRouter();
-
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query, 300);
 
   const handleChangeQuery = (query: string) => {
     setQuery(query);
   };
 
-  const handleClickRow = (rowData: TableData) => {
-    router.push(`/doctor/patient/${rowData.id}`);
+  const handleClickRow = (user: TableData) => {
+    router.push(`/doctor/patient/${user.id}`);
   };
 
-  const { data: user } = useFetchDoctorPatients();
+  const { data: user } = useFetchDoctorPatients({ query: debouncedQuery, limit: 10 });
+
+  console.log('users in page', user?.patients);
 
   let tableData: TableData[] = [];
 
@@ -146,11 +151,26 @@ const DoctorHome = () => {
     );
   }
 
+  const searchDialogOptions = user?.patients.map(({ id, firstName, lastName }) => (
+    <Link key={id} href={`/doctor/patient/${id}`} className="flex cursor-pointer gap-2">
+      <CommandItem key={id} className="w-full">
+        <UserIcon />
+        <span>
+          {firstName} {lastName}
+        </span>
+      </CommandItem>
+    </Link>
+  ));
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-2">
         <div className="flex min-w-[420px] flex-1">
-          <SearchCommandDialog query={query} onQueryChange={handleChangeQuery} />
+          <SearchCommandDialog
+            query={query}
+            onQueryChange={handleChangeQuery}
+            options={searchDialogOptions}
+          />
         </div>
         <div className="flex gap-2">
           <AddPatientDialog />

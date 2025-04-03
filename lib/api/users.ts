@@ -52,6 +52,19 @@ const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileRe
   },
 };
 
+const filterUsersBySearchQuery = (users: UserProfileDTO[], searchQuery: string) => {
+  return users.filter((user) => {
+    const queryLowerCase = searchQuery.toLowerCase();
+    const firstName = user.firstName ? user.firstName.toLowerCase() : '';
+    const lastName = user.lastName ? user.lastName.toLowerCase() : '';
+
+    return (
+      firstName.toLowerCase().includes(queryLowerCase) ||
+      lastName.toLowerCase().includes(queryLowerCase)
+    );
+  });
+};
+
 export const fetchCurrentUser = async (userId: string) => {
   try {
     const db = firebaseInstance.getDb();
@@ -109,7 +122,7 @@ export const fetchUsersWithLimit = async (
 
     const querySnapshot = await getDocs(q);
 
-    const usersResponse: UserProfileDTO[] = [];
+    const users: UserProfileDTO[] = [];
 
     if (querySnapshot.empty) {
       throw new Error('User data not found!');
@@ -117,11 +130,11 @@ export const fetchUsersWithLimit = async (
 
     querySnapshot.forEach((doc) => {
       if (doc.exists()) {
-        usersResponse.push(doc.data() as UserProfileDTO);
+        users.push(doc.data() as UserProfileDTO);
       }
     });
 
-    const filteredUsers = usersResponse.filter((user) => {
+    const filteredUsers = users.filter((user) => {
       const queryLowerCase = searchQuery.toLowerCase();
       const firstName = user.firstName ? user.firstName.toLowerCase() : '';
       const lastName = user.lastName ? user.lastName.toLowerCase() : '';
@@ -161,7 +174,15 @@ export const addPatient = async (patientId: string, doctorId: string | undefined
   }
 };
 
-export const fetchDoctorPatients = async (userId: string) => {
+export const fetchDoctorPatients = async ({
+  userId,
+  searchQuery,
+  fetchLimit,
+}: {
+  userId: string;
+  searchQuery: string;
+  fetchLimit: number;
+}) => {
   try {
     const db = firebaseInstance.getDb();
     const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId).withConverter(
@@ -173,32 +194,40 @@ export const fetchDoctorPatients = async (userId: string) => {
       throw new Error('User doc not found');
     }
 
+    const usersCollection = collection(db, FIRESTORE_COLLECTIONS.USERS).withConverter(
+      userProfileConverter,
+    );
+
     const userDocUserRefs = userDoc.data().userRefs as DocumentReferenceSchema[];
 
-    const patientsDocsToFetch = userDocUserRefs.map(({ id }) => {
-      const patientDoctorRef = doc(db, FIRESTORE_COLLECTIONS.USERS, id).withConverter(
-        userProfileConverter,
-      );
-      return getDoc(patientDoctorRef);
-    });
+    const patientsDocsToFetch = userDocUserRefs.map((userDoc) => userDoc.id);
 
-    const patientDocs = await Promise.all([...patientsDocsToFetch]);
-
-    if (patientDocs.length === 0) {
+    if (patientsDocsToFetch.length === 0) {
       throw new Error('No patients found');
     }
 
+    const q = query(
+      usersCollection,
+      where('__name__', 'in', patientsDocsToFetch),
+
+      limit(fetchLimit),
+    );
+
+    const docSnapshots = await getDocs(q);
+
     const patients: UserProfileDTO[] = [];
 
-    patientDocs.forEach((doc) => {
+    docSnapshots.forEach((doc) => {
       if (doc.exists()) {
         patients.push(doc.data() as UserProfileDTO);
       }
     });
 
+    const filteredUsers = filterUsersBySearchQuery(patients, searchQuery);
+
     const doctor = {
       ...userDoc.data(),
-      patients,
+      patients: filteredUsers,
     };
 
     return doctor;
