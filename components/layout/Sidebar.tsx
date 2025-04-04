@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
 import { LayoutDashboardIcon, LogOutIcon, UserRoundPenIcon } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '../ui/button';
@@ -69,6 +69,7 @@ const Sidebar = () => {
           className="w-[max(220px)]"
           onCloseAutoFocus={(e) => e.preventDefault()}
           sideOffset={10}
+          side="top"
         >
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -87,7 +88,7 @@ const Sidebar = () => {
                 </DropdownMenuItem>
               );
             })}
-            <DropdownMenuItem className="transition hover:translate-x-2">
+            <DropdownMenuItem className="transition hover:translate-x-2" onSelect={() => signOut()}>
               <div className="flex gap-2 hover:text-cyan-500">
                 <LogOutIcon />
                 <span className="hover:text-cyan-500">Log out</span>

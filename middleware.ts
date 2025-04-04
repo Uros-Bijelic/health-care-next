@@ -9,7 +9,7 @@ const AUTH_ROUTES = ['/login', '/register'];
 export default auth((req) => {
   const isAuth = !!req.auth;
   const pathName = req.nextUrl.pathname;
-  // const isDoctor = req.auth?.user.role === 'doctor'; // use this later to check routes
+  // const isDoctor = req.auth?.user.role === 'doctor'; // save this for later to implement
 
   if (!isAuth) {
     if (!AUTH_ROUTES.includes(pathName)) {
@@ -17,7 +17,9 @@ export default auth((req) => {
     }
   } else {
     if (AUTH_ROUTES.includes(pathName)) {
-      return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+      if (pathName.startsWith('/user')) {
+        return NextResponse.redirect(new URL('/', req.nextUrl.origin));
+      }
     }
   }
 });
