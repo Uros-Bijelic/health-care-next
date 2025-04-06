@@ -133,8 +133,6 @@ const DoctorHome = () => {
 
   const { data: user } = useFetchDoctorPatients({ query: debouncedQuery, limit: 10 });
 
-  console.log('users in page', user?.patients);
-
   let tableData: TableData[] = [];
 
   if (user) {

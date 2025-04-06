@@ -1,12 +1,18 @@
+import PatientOverview from '@/components/features/doctors/patient-overview';
+import { fetchUserVisits } from '@/lib/api/users';
+
 type Props = {
   params: Promise<{ id: string }>;
 };
 
+// Ovu stranu namerno radim SSR da bih prodiskutovao sa Nenadom pitanje u mom test editoru
+
 const Page = async ({ params }: Props) => {
   const patientId = (await params).id;
-  console.log('patientId', patientId);
 
-  return <div>Specific Patient Page</div>;
+  const userWithVisits = await fetchUserVisits(patientId);
+
+  return userWithVisits ? <PatientOverview user={userWithVisits} /> : null;
 };
 
 export default Page;

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 
 export const useDebounce = (value: string, timeout = 500) => {
