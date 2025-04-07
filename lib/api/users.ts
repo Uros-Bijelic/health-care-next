@@ -1,32 +1,27 @@
+import type { UserProfileResponse } from '@/lib/validation';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import {
   arrayUnion,
   collection,
   doc,
-  FirestoreDataConverter,
+  type FirestoreDataConverter,
   FirestoreError,
   getDoc,
   getDocs,
   limit,
   query,
   QueryDocumentSnapshot,
-  SnapshotOptions,
+  type SnapshotOptions,
   Timestamp,
   updateDoc,
   where,
 } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
-import type {
-  DocumentReferenceSchema,
-  UserProfileDTO,
-  UserProfileResponse,
-  UserVisitDTO,
-  UserVisitFS,
-} from '../validation';
+import type { DocumentReferenceSchema, UserProfileDTO } from '../validation';
 
-// * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
-const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
+// * Converts Timestamps to Date and vice verca for user
+export const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileResponse> = {
   toFirestore: (user: UserProfileDTO): UserProfileResponse => {
     // Convert Dates back to Timestamps when writing to Firestore
     return {
@@ -48,27 +43,6 @@ const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileRe
       updatedAt: data.updatedAt?.toDate().toString(),
       lastVisitedDate: data.lastVisitedDate?.toDate().toString(),
       birthDate: data.birthDate?.toDate().toString(),
-    };
-  },
-};
-
-// * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
-const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisitFS> = {
-  toFirestore: (user: UserVisitDTO): UserVisitFS => {
-    // Convert Dates back to Timestamps when writing to Firestore
-    return {
-      ...user,
-      createdAt: Timestamp.fromDate(new Date(user.createdAt)),
-      updatedAt: Timestamp.fromDate(new Date(user.updatedAt)),
-    };
-  },
-  fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): UserVisitDTO => {
-    const data = snapshot.data(options) as UserVisitFS;
-    // Convert Timestamps to Dates when reading from Firestore
-    return {
-      ...data,
-      createdAt: data.createdAt?.toDate().toString(),
-      updatedAt: data.updatedAt?.toDate().toString(),
     };
   },
 };
@@ -244,59 +218,5 @@ export const fetchDoctorPatients = async (
       throw new Error(errorMessage);
     }
     throw new Error('An unexpected error occurred');
-  }
-};
-
-export const fetchUserVisits = async (userId: string) => {
-  try {
-    const db = firebaseInstance.getDb();
-    const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId).withConverter(
-      userProfileConverter,
-    );
-    const userDoc = await getDoc(userDocRef);
-
-    if (!userDoc.exists()) {
-      throw new Error('User not found');
-    }
-
-    const userVisitsSubcollections = collection(
-      db,
-      FIRESTORE_COLLECTIONS.USERS,
-      userId,
-      FIRESTORE_COLLECTIONS.VISITS,
-    ).withConverter(visitsDataConverter);
-
-    const visitsDocs = await getDocs(userVisitsSubcollections);
-
-    if (visitsDocs.empty) {
-      const user = {
-        ...userDoc.data(),
-        visits: [],
-      };
-      return user;
-    }
-
-    const visits = [] as UserVisitDTO[];
-
-    visitsDocs.forEach((doc) => {
-      if (doc.exists()) {
-        console.log('DOC U FOREACH ZA VISIT', doc.data());
-        visits.push(doc.data() as UserVisitDTO);
-      }
-    });
-
-    const user = {
-      ...userDoc.data(),
-      visits,
-    };
-
-    return user;
-  } catch (error) {
-    if (error instanceof FirestoreError) {
-      const errorMessage = getFirestoreErrorMessage(error.code);
-      throw new Error(errorMessage);
-    }
-
-    throw new Error('Something went wrong, could not fetch user with visits');
   }
 };

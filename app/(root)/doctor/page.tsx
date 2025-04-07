@@ -152,7 +152,7 @@ const DoctorHome = () => {
         <div className="flex min-w-[420px] flex-1 rounded-lg border">
           <Command>
             <CommandInput
-              placeholder="Type a command or search..."
+              placeholder="Search for a patient..."
               value={query}
               onValueChange={handleChangeQuery}
             />

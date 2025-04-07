@@ -1,8 +1,8 @@
 'use client';
 
-import SearchCommandDialog from '@/components/ui/search-command-dialog';
 import { format } from 'date-fns';
 // import { format } from 'path';
+import { Command, CommandInput } from '@/components/ui/command';
 import type { UserProfileWithVisits } from '@/lib/validation';
 import { useState } from 'react';
 import AddPatientDialog from './add-patient-dialog';
@@ -76,24 +76,31 @@ const PatientOverview = ({ user }: Props) => {
   // console.log('user patient overerview', user);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2 shadow-md max-sm:p-2">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2 p-3 shadow-md">
         <h1 className="text-2xl font-bold">Patient Info</h1>
-        <div className="flex flex-col gap-1">
-          <p className="p3-medium">Cretaed at: {format(new Date(user.createdAt), 'dd/MMM/yyyy')}</p>
+        <div className="flex flex-col gap-2">
           <p className="p3-medium">
-            Patient: {user.firstName} {user.lastName}
+            <span className="font-bold">Creted at:</span>
+            {format(new Date(user.createdAt), 'dd/MMM/yyyy')}
+          </p>
+          <p className="p3-medium">
+            <span className="font-bold">Patient:</span> {user.firstName} {user.lastName}
+          </p>
+          <p className="p3-medium">
+            <span className="font-bold">Allergies:</span> {user.allergies || 'N/A'}
           </p>
         </div>
-        <p className="p3-medium">Allergies: {user.allergies}</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <div className="flex min-w-[420px] flex-1">
-          <SearchCommandDialog
-            query={query}
-            onQueryChange={handleChangeQuery}
-            // options={searchDialogOptions}
-          />
+          <Command>
+            <CommandInput
+              placeholder="Type a command or search..."
+              value={query}
+              onValueChange={handleChangeQuery}
+            />
+          </Command>
         </div>
         <div className="flex gap-2">
           <AddPatientDialog />

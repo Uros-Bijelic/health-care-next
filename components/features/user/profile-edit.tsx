@@ -6,7 +6,7 @@ import RHFShadcnDatePicker from '@/components/ui/rhf-inputs/rhf-shadcn-date-pick
 import RHFTextarea from '@/components/ui/rhf-inputs/rhf-textarea';
 import SpinningLoader from '@/components/ui/SpinningLoader';
 import { useUpdateUser } from '@/lib/hooks/mutations/use-update-user';
-import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
+import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch-current-user';
 import { UserProfile, userProfileSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';

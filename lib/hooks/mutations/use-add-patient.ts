@@ -1,5 +1,5 @@
 import { addPatient } from '@/lib/api/users';
-import { FIRESTORE_COLLECTIONS } from '@/lib/constants';
+import { QUERY_KEYS } from '@/lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
@@ -13,7 +13,7 @@ export const useAddPatient = () => {
   return useMutation({
     mutationFn: ({ patientId }: QueryFnArg) => addPatient(patientId, doctorId || ''),
     onSuccess() {
-      queryClient.invalidateQueries({ queryKey: [FIRESTORE_COLLECTIONS.DOCTOR_PATIENTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
     },
   });
 };

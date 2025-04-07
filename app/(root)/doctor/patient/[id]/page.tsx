@@ -1,5 +1,5 @@
 import PatientOverview from '@/components/features/doctors/patient-overview';
-import { fetchUserVisits } from '@/lib/api/users';
+import { fetchUserVisits } from '@/lib/api/visits';
 
 type Props = {
   params: Promise<{ id: string }>;

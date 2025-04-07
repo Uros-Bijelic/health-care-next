@@ -1,5 +1,5 @@
 import { updateUser } from '@/lib/actions/users';
-import { EQueryKeys } from '@/lib/constants';
+import { QUERY_KEYS } from '@/lib/constants';
 import { UserProfile } from '@/lib/validation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -18,7 +18,7 @@ export const useUpdateUser = () => {
     mutationFn: async ({ data }: IMutationFnArgs) => updateUser(data, userId || ''),
     onSuccess() {
       queryClent.invalidateQueries({
-        queryKey: [EQueryKeys.USER, userId],
+        queryKey: [QUERY_KEYS.USERS, userId],
       });
     },
   });

@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch--current-user';
+import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch-current-user';
 import { LayoutDashboardIcon, LogOutIcon, UserRoundPenIcon } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
