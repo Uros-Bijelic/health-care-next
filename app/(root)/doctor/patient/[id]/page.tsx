@@ -1,3 +1,4 @@
+import VisitsOverview from '@/components/features/doctors/visits-overview';
 import { fetchCurrentUser } from '@/lib/api/users';
 import { fetchUserVisits } from '@/lib/api/visits';
 import { UserProfileWithVisits } from '@/lib/validation';
@@ -24,9 +25,7 @@ const Page = async ({ params }: Props) => {
     console.log('Error', error);
   }
 
-  console.log('userWithVisits', userWithVisits);
-
-  return null;
+  return userWithVisits ? <VisitsOverview user={userWithVisits} /> : null;
 };
 
 export default Page;

@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { Command, CommandInput } from '@/components/ui/command';
 import type { UserProfileWithVisits } from '@/lib/validation';
 import { useState } from 'react';
-import AddPatientDialog from './add-patient-dialog';
+import AddVisitDialog from './add-visit-dialog';
 
 type Props = {
   user: UserProfileWithVisits;
@@ -103,7 +103,7 @@ const VisitsOverview = ({ user }: Props) => {
           </Command>
         </div>
         <div className="flex gap-2">
-          <AddPatientDialog />
+          <AddVisitDialog />
         </div>
       </div>
       {/* {tableData && (
