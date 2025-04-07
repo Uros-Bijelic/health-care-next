@@ -77,7 +77,7 @@ const AddPatientDialog = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setisDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="text-white">Add Patient</Button>
+        <Button className="h-auto">Add Patient</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">

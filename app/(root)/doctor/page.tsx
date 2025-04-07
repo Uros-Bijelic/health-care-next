@@ -1,17 +1,14 @@
-// import DoctorDashboard from '@/components/features/doctors/doctor-dashboard.';
 'use client';
 
 import AddPatientDialog from '@/components/features/doctors/add-patient-dialog';
 import { Button } from '@/components/ui/button';
-import { CommandItem } from '@/components/ui/command';
-import SearchCommandDialog from '@/components/ui/search-command-dialog';
+import { Command, CommandInput } from '@/components/ui/command';
 import DataTable from '@/components/ui/tables/data-table';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useFetchDoctorPatients } from '@/lib/hooks/queries/use-fetch-doctor-patients';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ArrowUpDownIcon, UserIcon } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowUpDownIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -149,26 +146,17 @@ const DoctorHome = () => {
     );
   }
 
-  const searchDialogOptions = user?.patients.map(({ id, firstName, lastName }) => (
-    <Link key={id} href={`/doctor/patient/${id}`} className="flex cursor-pointer gap-2">
-      <CommandItem key={id} className="w-full">
-        <UserIcon />
-        <span>
-          {firstName} {lastName}
-        </span>
-      </CommandItem>
-    </Link>
-  ));
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-2">
-        <div className="flex min-w-[420px] flex-1">
-          <SearchCommandDialog
-            query={query}
-            onQueryChange={handleChangeQuery}
-            options={searchDialogOptions}
-          />
+        <div className="flex min-w-[420px] flex-1 rounded-lg border">
+          <Command>
+            <CommandInput
+              placeholder="Type a command or search..."
+              value={query}
+              onValueChange={handleChangeQuery}
+            />
+          </Command>
         </div>
         <div className="flex gap-2">
           <AddPatientDialog />
