@@ -41,7 +41,10 @@ export const fetchUserVisits = async (patientId: string) => {
     const db = firebaseInstance.getDb();
 
     const visitsCollections = collection(db, FIRESTORE_COLLECTIONS.VISITS);
-    const visitsCollectionQuery = query(visitsCollections, where('patientId', '==', patientId));
+    const visitsCollectionQuery = query(
+      visitsCollections,
+      where('patientId', '==', patientId),
+    ).withConverter(visitsDataConverter);
     const visitSnapshots = await getDocs(visitsCollectionQuery);
 
     const visits: UserVisitDTO[] = [];

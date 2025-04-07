@@ -23,6 +23,9 @@ const Page = async ({ params }: Props) => {
     };
   } catch (error) {
     console.log('Error', error);
+    if (error instanceof Error) {
+      return <h1>{error.message || 'Something went wrong, could not show visit'}</h1>;
+    }
   }
 
   return userWithVisits ? <VisitsOverview user={userWithVisits} /> : null;
