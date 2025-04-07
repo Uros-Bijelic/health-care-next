@@ -1,20 +1,32 @@
-import PatientOverview from '@/components/features/doctors/patient-overview';
+import { fetchCurrentUser } from '@/lib/api/users';
 import { fetchUserVisits } from '@/lib/api/visits';
+import { UserProfileWithVisits } from '@/lib/validation';
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-// Ovu stranu namerno radim SSR da bih prodiskutovao sa Nenadom pitanje u mom test editoru
-
 const Page = async ({ params }: Props) => {
   const patientId = (await params).id;
 
-  const userWithVisits = await fetchUserVisits(patientId);
+  let userWithVisits = {} as UserProfileWithVisits;
+
+  try {
+    const userVisitsPromise = fetchUserVisits(patientId);
+    const currentUserPromise = fetchCurrentUser(patientId);
+    const [userVisits, currentUser] = await Promise.all([userVisitsPromise, currentUserPromise]);
+
+    userWithVisits = {
+      ...currentUser,
+      visits: userVisits,
+    };
+  } catch (error) {
+    console.log('Error', error);
+  }
 
   console.log('userWithVisits', userWithVisits);
 
-  return userWithVisits ? <PatientOverview user={userWithVisits} /> : null;
+  return null;
 };
 
 export default Page;

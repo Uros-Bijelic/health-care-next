@@ -61,7 +61,7 @@ type Props = {
 //   },
 // ];
 
-const PatientOverview = ({ user }: Props) => {
+const VisitsOverview = ({ user }: Props) => {
   const [query, setQuery] = useState('');
   // const debouncedQuery = useDebounce(query, 300);
 
@@ -115,4 +115,4 @@ const PatientOverview = ({ user }: Props) => {
   );
 };
 
-export default PatientOverview;
+export default VisitsOverview;

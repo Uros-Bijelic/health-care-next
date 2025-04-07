@@ -1,17 +1,19 @@
 import type { UserVisitFS } from '@/lib/validation';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import {
-  doc,
+  collection,
   type FirestoreDataConverter,
   FirestoreError,
-  getDoc,
+  getDocs,
+  query,
   QueryDocumentSnapshot,
   type SnapshotOptions,
   Timestamp,
+  where,
 } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
-import { UserVisitDTO } from '../validation';
+import type { UserVisitDTO } from '../validation';
 
 // * Converts Timestamps to Date and vice verca for visits
 export const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisitFS> = {
@@ -34,27 +36,61 @@ export const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisit
   },
 };
 
-export const fetchSelectedVisit = async (visitId: string) => {
+export const fetchUserVisits = async (patientId: string) => {
   try {
     const db = firebaseInstance.getDb();
 
-    const visitRef = doc(db, FIRESTORE_COLLECTIONS.VISITS, visitId).withConverter(
-      visitsDataConverter,
-    );
+    const visitsCollections = collection(db, FIRESTORE_COLLECTIONS.VISITS);
+    const visitsCollectionQuery = query(visitsCollections, where('patientId', '==', patientId));
+    const visitSnapshots = await getDocs(visitsCollectionQuery);
 
-    const visitDoc = await getDoc(visitRef);
+    const visits: UserVisitDTO[] = [];
 
-    if (!visitDoc.exists()) {
-      throw new Error('Visit in not found');
+    if (visitSnapshots.empty) {
+      throw new Error('Visits not found!');
     }
 
-    return visitDoc.data();
+    visitSnapshots.forEach((doc) => {
+      if (doc.exists()) {
+        visits.push(doc.data() as UserVisitDTO);
+      }
+    });
+
+    return visits;
   } catch (error) {
     if (error instanceof FirestoreError) {
       const errorMessage = getFirestoreErrorMessage(error.code);
       throw new Error(errorMessage);
     }
-
-    throw new Error('Something went wrong, could not fetch user with visits');
+    throw new Error('Something wrong happened could not retrive visits');
   }
 };
+
+// export const fetchSelectedVisit = async (visitId: string) => {
+//   try {
+//     const db = firebaseInstance.getDb();
+
+//     const visitRef = doc(db, FIRESTORE_COLLECTIONS.VISITS, visitId).withConverter(
+//       visitsDataConverter,
+//     );
+
+//     const visitDoc = await getDoc(visitRef);
+
+//     if (!visitDoc.exists()) {
+//       throw new Error('Visit in not found');
+//     }
+
+//     return visitDoc.data();
+//   } catch (error) {
+//     if (error instanceof FirestoreError) {
+//       const errorMessage = getFirestoreErrorMessage(error.code);
+//       throw new Error(errorMessage);
+//     }
+
+//     throw new Error('Something went wrong, could not fetch user with visits');
+//   }
+// };
+
+/**
+ * kliknuo je na pacijenta i otisao na screen sa svim njegovom visitima i sa nekim user detals
+ */

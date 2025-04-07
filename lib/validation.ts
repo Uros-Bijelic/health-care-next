@@ -60,6 +60,7 @@ export const userVisitSchemaResponse = z.object({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
   userId: z.string().trim().min(1, 'Required'),
+  fullName: z.string().trim().min(1, 'Required'),
   diagnosis: z.string().trim().min(1, 'Required'),
   reasonForVisit: z.string().trim().min(1, 'Required'),
   specialNotes: z.string().trim().optional(),
