@@ -10,11 +10,11 @@ type HookArgs = {
 
 export const useFetchUsersWithLimit = ({ query, limit = 10 }: HookArgs) => {
   const { data: session } = useSession();
-  const userId = session?.user.id || '';
+  const userId = session?.user.id;
 
   return useQuery({
     queryKey: [FIRESTORE_COLLECTIONS, query, userId],
-    queryFn: () => fetchUsersWithLimit(query, limit, userId),
+    queryFn: () => fetchUsersWithLimit(query, limit, userId || ''),
     enabled: !!userId,
   });
 };

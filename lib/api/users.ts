@@ -21,9 +21,8 @@ import type {
   DocumentReferenceSchema,
   UserProfileDTO,
   UserProfileResponse,
-  UserVisit,
   UserVisitDTO,
-  UserVisitResponse,
+  UserVisitFS,
 } from '../validation';
 
 // * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
@@ -54,9 +53,8 @@ const userProfileConverter: FirestoreDataConverter<UserProfileDTO, UserProfileRe
 };
 
 // * Created for working just with dates so i don't have to manually convert from Timestamp to Date and vice verca
-
-const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisitResponse> = {
-  toFirestore: (user: UserVisitDTO): UserVisitResponse => {
+const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisitFS> = {
+  toFirestore: (user: UserVisitDTO): UserVisitFS => {
     // Convert Dates back to Timestamps when writing to Firestore
     return {
       ...user,
@@ -65,7 +63,7 @@ const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisitRespons
     };
   },
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): UserVisitDTO => {
-    const data = snapshot.data(options) as UserVisitResponse;
+    const data = snapshot.data(options) as UserVisitFS;
     // Convert Timestamps to Dates when reading from Firestore
     return {
       ...data,
@@ -169,9 +167,7 @@ export const fetchUsersWithLimit = async (
   }
 };
 
-export const addPatient = async (patientId: string, doctorId: string | undefined) => {
-  if (!doctorId) return;
-
+export const addPatient = async (patientId: string, doctorId: string) => {
   try {
     const db = firebaseInstance.getDb();
     const doctorRef = doc(db, FIRESTORE_COLLECTIONS.USERS, doctorId);
@@ -188,15 +184,11 @@ export const addPatient = async (patientId: string, doctorId: string | undefined
   }
 };
 
-export const fetchDoctorPatients = async ({
-  userId,
-  searchQuery,
-  fetchLimit,
-}: {
-  userId: string;
-  searchQuery: string;
-  fetchLimit: number;
-}) => {
+export const fetchDoctorPatients = async (
+  userId: string,
+  searchQuery: string,
+  fetchLimit: number,
+) => {
   try {
     const db = firebaseInstance.getDb();
     const userDocRef = doc(db, FIRESTORE_COLLECTIONS.USERS, userId).withConverter(
@@ -284,12 +276,12 @@ export const fetchUserVisits = async (userId: string) => {
       return user;
     }
 
-    const visits = [] as UserVisit[];
+    const visits = [] as UserVisitDTO[];
 
     visitsDocs.forEach((doc) => {
       if (doc.exists()) {
         console.log('DOC U FOREACH ZA VISIT', doc.data());
-        // visits.push(doc.data() as UserVisit)
+        visits.push(doc.data() as UserVisitDTO);
       }
     });
 

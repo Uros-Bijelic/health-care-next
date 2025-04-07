@@ -11,7 +11,7 @@ export const useAddPatient = () => {
   const doctorId = session?.user.id;
 
   return useMutation({
-    mutationFn: ({ patientId }: QueryFnArg) => addPatient(patientId, doctorId),
+    mutationFn: ({ patientId }: QueryFnArg) => addPatient(patientId, doctorId || ''),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [FIRESTORE_COLLECTIONS.DOCTOR_PATIENTS] });
     },

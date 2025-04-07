@@ -66,7 +66,7 @@ export const userVisitSchemaResponse = z.object({
   updatedAt: z.instanceof(Timestamp),
 });
 
-export type UserVisitResponse = z.infer<typeof userVisitSchemaResponse>;
+export type UserVisitFS = z.infer<typeof userVisitSchemaResponse>;
 
 export const userVisitSchemaDTO = userVisitSchemaResponse.extend({
   createdAt: z.string(),
@@ -75,8 +75,8 @@ export const userVisitSchemaDTO = userVisitSchemaResponse.extend({
 
 export type UserVisitDTO = z.infer<typeof userVisitSchemaDTO>;
 
-export const userProfileSchemaWithVisitResponse = userProfileSchemaResponse.extend({
-  visits: z.array(userVisitSchemaResponse),
+export const userProfileSchemaWithVisitsFS = userProfileSchemaDTO.extend({
+  visits: z.array(userVisitSchemaDTO),
 });
 
-export type UserVisit = z.infer<typeof userProfileSchemaWithVisitResponse>;
+export type UserProfileWithVisits = z.infer<typeof userProfileSchemaWithVisitsFS>;

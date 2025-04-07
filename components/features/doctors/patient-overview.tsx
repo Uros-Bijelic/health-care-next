@@ -1,13 +1,14 @@
 'use client';
 
 import SearchCommandDialog from '@/components/ui/search-command-dialog';
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
+// import { format } from 'path';
+import type { UserProfileWithVisits } from '@/lib/validation';
 import { useState } from 'react';
-import {} from '../user/profile-edit';
 import AddPatientDialog from './add-patient-dialog';
 
 type Props = {
-  user: unknown;
+  user: UserProfileWithVisits;
 };
 
 // type TableData = {};
@@ -76,9 +77,15 @@ const PatientOverview = ({ user }: Props) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h3>Patintet Info</h3>
-        {/* <p>Cretaed at: {format(new Date(user.createdAt), 'dd/MMM/yyyy')}</p> */}
+      <div className="flex flex-col gap-2 shadow-md max-sm:p-2">
+        <h1 className="text-2xl font-bold">Patient Info</h1>
+        <div className="flex flex-col gap-1">
+          <p className="p3-medium">Cretaed at: {format(new Date(user.createdAt), 'dd/MMM/yyyy')}</p>
+          <p className="p3-medium">
+            Patient: {user.firstName} {user.lastName}
+          </p>
+        </div>
+        <p className="p3-medium">Allergies: {user.allergies}</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <div className="flex min-w-[420px] flex-1">

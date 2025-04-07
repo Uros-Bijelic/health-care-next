@@ -12,6 +12,8 @@ const Page = async ({ params }: Props) => {
 
   const userWithVisits = await fetchUserVisits(patientId);
 
+  console.log('userWithVisits', userWithVisits);
+
   return userWithVisits ? <PatientOverview user={userWithVisits} /> : null;
 };
 

@@ -10,11 +10,11 @@ type HookArgs = {
 
 export const useFetchDoctorPatients = ({ query, limit }: HookArgs) => {
   const { data: session } = useSession();
-  const userId = session?.user.id || '';
+  const userId = session?.user.id;
 
   return useQuery({
     queryKey: [FIRESTORE_COLLECTIONS.USERS, userId, query, limit],
-    queryFn: () => fetchDoctorPatients({ userId, searchQuery: query, fetchLimit: limit }),
+    queryFn: () => fetchDoctorPatients(userId || '', query, limit),
     enabled: !!userId,
   });
 };
