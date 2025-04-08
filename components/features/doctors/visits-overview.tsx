@@ -7,6 +7,7 @@ import type { UserProfileWithVisits } from '@/lib/validation';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDownIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import AddVisitDialog from './add-visit-dialog';
 
@@ -16,6 +17,7 @@ type Props = {
 };
 
 type TableData = {
+  id: string;
   firstName: string;
   lastName: string;
   createdAt: string;
@@ -86,6 +88,7 @@ const columns: ColumnDef<TableData>[] = [
 ];
 
 const VisitsOverview = ({ user, patientId }: Props) => {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   // const debouncedQuery = useDebounce(query, 300);
 
@@ -93,20 +96,21 @@ const VisitsOverview = ({ user, patientId }: Props) => {
     setQuery(query);
   };
 
-  console.log('user', user);
+  const handleClickRow = (data: TableData) => {
+    console.log('a', data);
 
-  // const handleClickRow = (user: string) => {};
-
-  // console.log('user patient overerview', user);
+    router.push(`/doctor/visit/${data.id}`);
+  };
 
   let tableData: TableData[] = [];
 
   if (user.visits.length > 0) {
-    tableData = user.visits.map(({ firstName, lastName, createdAt, reasonForVisit }) => ({
+    tableData = user.visits.map(({ firstName, lastName, createdAt, reasonForVisit, id }) => ({
       firstName,
       lastName,
       createdAt: format(new Date(createdAt), 'dd/MMM/yyyy'),
       reasonForVisit,
+      id,
     }));
   }
 
@@ -147,7 +151,7 @@ const VisitsOverview = ({ user, patientId }: Props) => {
       </div>
       {tableData && (
         <div>
-          <DataTable columns={columns} data={tableData} enableSorting onRowClick={() => {}} />
+          <DataTable columns={columns} data={tableData} enableSorting onRowClick={handleClickRow} />
         </div>
       )}
     </div>

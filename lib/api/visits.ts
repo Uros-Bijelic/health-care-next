@@ -56,8 +56,13 @@ export const fetchUserVisits = async (patientId: string) => {
     }
 
     visitSnapshots.forEach((doc) => {
+      console.log('visit doc', doc.id);
       if (doc.exists()) {
-        visits.push(doc.data() as UserVisitDTO);
+        const newDoc = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        visits.push(newDoc as UserVisitDTO);
       }
     });
 
