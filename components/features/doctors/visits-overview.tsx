@@ -1,14 +1,14 @@
 'use client';
 
-import { format } from 'date-fns';
-// import { format } from 'path';
 import { Command, CommandInput } from '@/components/ui/command';
 import type { UserProfileWithVisits } from '@/lib/validation';
+import { format } from 'date-fns';
 import { useState } from 'react';
 import AddVisitDialog from './add-visit-dialog';
 
 type Props = {
   user: UserProfileWithVisits;
+  patientId: string;
 };
 
 // type TableData = {};
@@ -61,7 +61,7 @@ type Props = {
 //   },
 // ];
 
-const VisitsOverview = ({ user }: Props) => {
+const VisitsOverview = ({ user, patientId }: Props) => {
   const [query, setQuery] = useState('');
   // const debouncedQuery = useDebounce(query, 300);
 
@@ -103,7 +103,11 @@ const VisitsOverview = ({ user }: Props) => {
           </Command>
         </div>
         <div className="flex gap-2">
-          <AddVisitDialog />
+          <AddVisitDialog
+            patientId={patientId}
+            firstName={user.firstName}
+            lastName={user.lastName}
+          />
         </div>
       </div>
       {/* {tableData && (

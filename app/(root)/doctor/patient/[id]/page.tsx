@@ -28,7 +28,7 @@ const Page = async ({ params }: Props) => {
     }
   }
 
-  return userWithVisits ? <VisitsOverview user={userWithVisits} /> : null;
+  return userWithVisits ? <VisitsOverview user={userWithVisits} patientId={patientId} /> : null;
 };
 
 export default Page;

@@ -15,7 +15,7 @@ export const useUpdateUser = () => {
   const queryClent = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ data }: IMutationFnArgs) => updateUser(data, userId || ''),
+    mutationFn: ({ data }: IMutationFnArgs) => updateUser(data, userId || ''),
     onSuccess() {
       queryClent.invalidateQueries({
         queryKey: [QUERY_KEYS.USERS, userId],

@@ -3,7 +3,7 @@ import { QUERY_KEYS } from '@/lib/constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
-type QueryFnArg = { patientId: string };
+type MutationFnArg = { patientId: string };
 
 export const useAddPatient = () => {
   const queryClient = useQueryClient();
@@ -11,7 +11,7 @@ export const useAddPatient = () => {
   const doctorId = session?.user.id;
 
   return useMutation({
-    mutationFn: ({ patientId }: QueryFnArg) => addPatient(patientId, doctorId || ''),
+    mutationFn: ({ patientId }: MutationFnArg) => addPatient(patientId, doctorId || ''),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
     },

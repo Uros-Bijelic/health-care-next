@@ -1,6 +1,7 @@
 import type { UserVisitFS } from '@/lib/validation';
 import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import {
+  addDoc,
   collection,
   type FirestoreDataConverter,
   FirestoreError,
@@ -13,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../constants';
 import { firebaseInstance } from '../firebase';
+import { AddVisitData } from '../hooks/mutations/use-create-new-visit';
 import type { UserVisitDTO } from '../validation';
 
 // * Converts Timestamps to Date and vice verca for visits
@@ -66,6 +68,24 @@ export const fetchUserVisits = async (patientId: string) => {
       throw new Error(errorMessage);
     }
     throw new Error('Something wrong happened could not retrive visits');
+  }
+};
+
+export const createNewVisit = async (data: AddVisitData, doctorId: string) => {
+  try {
+    const db = firebaseInstance.getDb();
+
+    const visitCollectionRef = collection(db, FIRESTORE_COLLECTIONS.VISITS);
+    await addDoc(visitCollectionRef, {
+      ...data,
+      doctorId,
+    });
+  } catch (error) {
+    if (error instanceof FirestoreError) {
+      const errorMessage = getFirestoreErrorMessage(error.code);
+      throw new Error(errorMessage);
+    }
+    throw new Error('Something went wrong. Could not create new doctor visit.');
   }
 };
 
