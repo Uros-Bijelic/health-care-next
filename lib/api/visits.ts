@@ -3,8 +3,10 @@ import { getFirestoreErrorMessage } from '@/utils/error-handling';
 import {
   addDoc,
   collection,
+  doc,
   type FirestoreDataConverter,
   FirestoreError,
+  getDoc,
   getDocs,
   query,
   QueryDocumentSnapshot,
@@ -38,7 +40,7 @@ export const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisit
   },
 };
 
-export const fetchUserVisits = async (patientId: string) => {
+export const fetchPatientVisits = async (patientId: string) => {
   try {
     const db = firebaseInstance.getDb();
 
@@ -56,7 +58,6 @@ export const fetchUserVisits = async (patientId: string) => {
     }
 
     visitSnapshots.forEach((doc) => {
-      console.log('visit doc', doc.id);
       if (doc.exists()) {
         const newDoc = {
           ...doc.data(),
@@ -94,30 +95,30 @@ export const createNewVisit = async (data: AddVisitData, doctorId: string) => {
   }
 };
 
-// export const fetchSelectedVisit = async (visitId: string) => {
-//   try {
-//     const db = firebaseInstance.getDb();
+export const fetchVisitById = async (visitId: string) => {
+  try {
+    const db = firebaseInstance.getDb();
 
-//     const visitRef = doc(db, FIRESTORE_COLLECTIONS.VISITS, visitId).withConverter(
-//       visitsDataConverter,
-//     );
+    const visitRef = doc(db, FIRESTORE_COLLECTIONS.VISITS, visitId).withConverter(
+      visitsDataConverter,
+    );
 
-//     const visitDoc = await getDoc(visitRef);
+    const visitDoc = await getDoc(visitRef);
 
-//     if (!visitDoc.exists()) {
-//       throw new Error('Visit in not found');
-//     }
+    if (!visitDoc.exists()) {
+      throw new Error('Visit in not found');
+    }
 
-//     return visitDoc.data();
-//   } catch (error) {
-//     if (error instanceof FirestoreError) {
-//       const errorMessage = getFirestoreErrorMessage(error.code);
-//       throw new Error(errorMessage);
-//     }
+    return visitDoc.data();
+  } catch (error) {
+    if (error instanceof FirestoreError) {
+      const errorMessage = getFirestoreErrorMessage(error.code);
+      throw new Error(errorMessage);
+    }
 
-//     throw new Error('Something went wrong, could not fetch user with visits');
-//   }
-// };
+    throw new Error('Something went wrong, could not fetch user with visits');
+  }
+};
 
 /**
  * kliknuo je na pacijenta i otisao na screen sa svim njegovom visitima i sa nekim user detals

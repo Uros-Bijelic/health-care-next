@@ -87,7 +87,7 @@ const columns: ColumnDef<TableData>[] = [
   },
 ];
 
-const VisitsOverview = ({ user, patientId }: Props) => {
+const PatientVisists = ({ user, patientId }: Props) => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   // const debouncedQuery = useDebounce(query, 300);
@@ -97,8 +97,6 @@ const VisitsOverview = ({ user, patientId }: Props) => {
   };
 
   const handleClickRow = (data: TableData) => {
-    console.log('a', data);
-
     router.push(`/doctor/visit/${data.id}`);
   };
 
@@ -158,4 +156,4 @@ const VisitsOverview = ({ user, patientId }: Props) => {
   );
 };
 
-export default VisitsOverview;
+export default PatientVisists;
