@@ -1,7 +1,6 @@
 import PatientVisists from '@/components/features/doctors/patient-visits';
 import { fetchCurrentUser } from '@/lib/api/users';
 import { fetchPatientVisits } from '@/lib/api/visits';
-import { UserProfileWithVisits } from '@/lib/validation';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -10,25 +9,22 @@ type Props = {
 const Page = async ({ params }: Props) => {
   const patientId = (await params).id;
 
-  let userWithVisits = {} as UserProfileWithVisits;
-
   try {
     const userVisitsPromise = fetchPatientVisits(patientId);
     const currentUserPromise = fetchCurrentUser(patientId);
-    const [userVisits, currentUser] = await Promise.all([userVisitsPromise, currentUserPromise]);
+    const [visits, currentUser] = await Promise.all([userVisitsPromise, currentUserPromise]);
+    // console.log('visits', visits);
+    // console.log('currentUser', currentUser);
 
-    userWithVisits = {
-      ...currentUser,
-      visits: userVisits,
-    };
+    return <PatientVisists user={currentUser} visits={visits} patientId={patientId} />;
   } catch (error) {
-    console.log('Error', error);
     if (error instanceof Error) {
+      console.log('Error fetching user and visits', error);
       return <h1>{error.message || 'Something went wrong, could not show visit'}</h1>;
     }
-  }
 
-  return userWithVisits ? <PatientVisists user={userWithVisits} patientId={patientId} /> : null;
+    return <h1>Unexpected error occurred.</h1>;
+  }
 };
 
 export default Page;

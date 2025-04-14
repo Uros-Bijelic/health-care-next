@@ -56,7 +56,7 @@ export const userProfileSchemaWithPatients = userProfileSchemaResponse.extend({
 
 export type UserProfileWithPatientsDTO = z.infer<typeof userProfileSchemaWithPatients>;
 
-export const userVisitSchemaResponse = z.object({
+export const visitSchemaResponse = z.object({
   id: z.string().trim().min(1, 'Required'),
   doctorId: z.string().trim().min(1, 'Required'),
   patientId: z.string().trim().min(1, 'Required'),
@@ -69,9 +69,9 @@ export const userVisitSchemaResponse = z.object({
   updatedAt: z.instanceof(Timestamp),
 });
 
-export type UserVisitFS = z.infer<typeof userVisitSchemaResponse>;
+export type UserVisitFS = z.infer<typeof visitSchemaResponse>;
 
-export const userVisitSchemaDTO = userVisitSchemaResponse.extend({
+export const userVisitSchemaDTO = visitSchemaResponse.extend({
   createdAt: z.string(),
   updatedAt: z.string(),
 });

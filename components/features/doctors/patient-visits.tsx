@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
 import DataTable from '@/components/ui/tables/data-table';
-import type { UserProfileWithVisits } from '@/lib/validation';
+import type { UserProfileDTO, UserVisitDTO } from '@/lib/validation';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDownIcon } from 'lucide-react';
@@ -12,7 +12,8 @@ import { useState } from 'react';
 import AddVisitDialog from './add-visit-dialog';
 
 type Props = {
-  user: UserProfileWithVisits;
+  user: UserProfileDTO;
+  visits: UserVisitDTO[];
   patientId: string;
 };
 
@@ -87,7 +88,7 @@ const columns: ColumnDef<TableData>[] = [
   },
 ];
 
-const PatientVisists = ({ user, patientId }: Props) => {
+const PatientVisists = ({ user, patientId, visits }: Props) => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   // const debouncedQuery = useDebounce(query, 300);
@@ -102,8 +103,8 @@ const PatientVisists = ({ user, patientId }: Props) => {
 
   let tableData: TableData[] = [];
 
-  if (user.visits.length > 0) {
-    tableData = user.visits.map(({ firstName, lastName, createdAt, reasonForVisit, id }) => ({
+  if (visits.length > 0) {
+    tableData = visits.map(({ firstName, lastName, createdAt, reasonForVisit, id }) => ({
       firstName,
       lastName,
       createdAt: format(new Date(createdAt), 'dd/MMM/yyyy'),
@@ -111,6 +112,9 @@ const PatientVisists = ({ user, patientId }: Props) => {
       id,
     }));
   }
+
+  console.log('user', user);
+  console.log('visits', visits);
 
   return (
     <div className="flex flex-col gap-6">
@@ -133,7 +137,7 @@ const PatientVisists = ({ user, patientId }: Props) => {
         <div className="flex min-w-[420px] flex-1">
           <Command>
             <CommandInput
-              placeholder="Type a command or search..."
+              placeholder="Search for a visit..."
               value={query}
               onValueChange={handleChangeQuery}
             />
