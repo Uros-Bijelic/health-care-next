@@ -10,14 +10,10 @@ type Props = {
 const Page = async ({ params }: Props) => {
   const visitId = (await params).id;
 
-  console.log('visitId', visitId);
-
   const visit: UserVisitDTO | undefined = await fetchVisitById(visitId);
 
-  console.log('visit', visit);
-
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-full flex-1 flex-col">
       <div className="flex flex-col gap-2">
         <p className="flex gap-2">
           <span className="font-bold">Creted at:</span>{' '}
@@ -36,7 +32,7 @@ const Page = async ({ params }: Props) => {
           {visit?.diagnosis}
         </p>
       </div>
-      <div className="flex-end flex flex-1 justify-end">
+      <div className="flex-end flex flex-1 items-end justify-end">
         <Link
           className="rounded-lg bg-cyan-500 px-4 py-2 text-white"
           href={`/doctor/patient/${visit.patientId}`}
