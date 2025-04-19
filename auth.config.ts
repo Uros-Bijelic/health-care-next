@@ -27,7 +27,8 @@ export const AUTH_CONFIG = {
             user = {
               id: doc.data().id,
               email: doc.data().email,
-              userName: doc.data().userName,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
               role: doc.data().role,
             };
           }
@@ -41,9 +42,23 @@ export const AUTH_CONFIG = {
     }),
   ],
   callbacks: {
+    jwt({ token, user }) {
+      if (user && user.role && token) {
+        token.role = user.role;
+      }
+
+      return token;
+    },
     async session({ session, token }) {
-      if (token && token.sub) {
-        session.user.id = token.sub;
+      if (token.sub && token.role) {
+        session = {
+          ...session,
+          user: {
+            ...session.user,
+            id: token.sub,
+            role: token.role as 'user' | 'doctor',
+          },
+        };
       }
       return session;
     },

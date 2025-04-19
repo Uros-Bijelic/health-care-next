@@ -6,51 +6,21 @@ import RHFShadcnDatePicker from '@/components/ui/rhf-inputs/rhf-shadcn-date-pick
 import RHFTextarea from '@/components/ui/rhf-inputs/rhf-textarea';
 import SpinningLoader from '@/components/ui/SpinningLoader';
 import { useUpdateUser } from '@/lib/hooks/mutations/use-update-user';
-import { useFetchUser } from '@/lib/hooks/queries/use-fetch-user';
+import { useFetchCurrentUser } from '@/lib/hooks/queries/use-fetch-current-user';
+import { UserProfile, userProfileSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Timestamp } from 'firebase/firestore';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-export const userProfileSchema = z.object({
-  userName: z.string().trim().min(3, 'Username is required and must be at least 3 characters long'),
-  firstName: z.string().trim().min(1, 'First name is required'),
-  lastName: z.string().trim().min(1, 'Last name is required'),
-  birthDate: z.date({ required_error: 'Date of birth is required' }).optional(),
-  profileImg: z.string().trim().optional(), // * add .url() method if later in the app i decide to store user images (probably with google)???
-  email: z.string().trim().email('Please provide valid email address'),
-  allergies: z.string().trim().optional(),
-  specialNotes: z.string().trim().optional(),
-  address: z.object({
-    country: z.string().trim().min(3, 'Country is required'),
-    city: z.string().trim().min(3, 'City is required'),
-    street: z.string().trim().min(3, 'Street is required'),
-    phone: z.string().trim().min(3, 'Phone is required'),
-  }),
-});
-
-export type UserProfileSchema = z.infer<typeof userProfileSchema>;
-
-export const userProfileSchemaDTO = userProfileSchema.extend({
-  id: z.string().trim(),
-  createdAt: z.instanceof(Timestamp),
-  updatedAt: z.instanceof(Timestamp),
-  birthDate: z.instanceof(Timestamp).optional(),
-});
-
-export type UserProfileSchemaDTO = z.infer<typeof userProfileSchemaDTO>;
 
 const ProfileEdit = () => {
-  const { data: userData, isPending, error: userDataError } = useFetchUser();
+  const { data: userData, isPending, error: userDataError } = useFetchCurrentUser();
   const { mutateAsync: updateUserAsync } = useUpdateUser();
 
-  const form = useForm<UserProfileSchema>({
+  const form = useForm<UserProfile>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
-      userName: '',
       email: '',
       birthDate: undefined,
       allergies: '',
@@ -66,9 +36,8 @@ const ProfileEdit = () => {
     values: {
       firstName: userData?.firstName || '',
       lastName: userData?.lastName || '',
-      userName: userData?.userName || '',
       email: userData?.email || '',
-      birthDate: userData?.birthDate?.toDate() || undefined,
+      birthDate: userData?.birthDate ? new Date(userData?.birthDate) : undefined,
       allergies: userData?.allergies || '',
       profileImg: userData?.profileImg || '',
       specialNotes: userData?.specialNotes || '',
@@ -86,7 +55,7 @@ const ProfileEdit = () => {
     formState: { isSubmitting },
   } = form;
 
-  const onSubmit = async (data: UserProfileSchema) => {
+  const onSubmit = async (data: UserProfile) => {
     await updateUserAsync(
       { data },
       {
@@ -115,7 +84,6 @@ const ProfileEdit = () => {
             <div className="flex flex-col gap-2">
               <RHFInput name="firstName" label="First Name" placeholder="First name" />
               <RHFInput name="lastName" label="Last Name" placeholder="Last name" />
-              <RHFInput name="userName" label="Userame" placeholder="Username" />
               <RHFInput name="email" label="Email" placeholder="Email" />
               <RHFShadcnDatePicker name="birthDate" label="Date of birth" chooseTime />
               <RHFTextarea name="allergies" placeholder="Allergies" label="Allergies" />
