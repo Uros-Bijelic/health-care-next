@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
 import DataTable from '@/components/ui/tables/data-table';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useFetchPatientVisits } from '@/lib/hooks/queries/use-fetch-patient-visits';
 import type { UserProfileDTO, UserVisitDTO } from '@/lib/validation';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
@@ -88,10 +90,10 @@ const columns: ColumnDef<TableData>[] = [
   },
 ];
 
-const PatientVisists = ({ user, patientId, visits }: Props) => {
+const PatientVisits = ({ user, patientId, visits }: Props) => {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  // const debouncedQuery = useDebounce(query, 300);
+  const debouncedQuery = useDebounce(query, 300);
 
   const handleChangeQuery = (query: string) => {
     setQuery(query);
@@ -101,10 +103,16 @@ const PatientVisists = ({ user, patientId, visits }: Props) => {
     router.push(`/doctor/visit/${data.id}`);
   };
 
+  const { data: patientData } = useFetchPatientVisits({
+    patientId,
+    initialVisits: visits,
+    searchQuery: debouncedQuery,
+  });
+
   let tableData: TableData[] = [];
 
-  if (visits.length > 0) {
-    tableData = visits.map(({ firstName, lastName, createdAt, reasonForVisit, id }) => ({
+  if (patientData && patientData.length > 0) {
+    tableData = patientData.map(({ firstName, lastName, createdAt, reasonForVisit, id }) => ({
       firstName,
       lastName,
       createdAt: format(new Date(createdAt), 'dd/MMM/yyyy'),
@@ -112,9 +120,6 @@ const PatientVisists = ({ user, patientId, visits }: Props) => {
       id,
     }));
   }
-
-  console.log('user', user);
-  console.log('visits', visits);
 
   return (
     <div className="flex flex-col gap-6">
@@ -160,4 +165,4 @@ const PatientVisists = ({ user, patientId, visits }: Props) => {
   );
 };
 
-export default PatientVisists;
+export default PatientVisits;

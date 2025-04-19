@@ -8,8 +8,10 @@ import {
   FirestoreError,
   getDoc,
   getDocs,
+  limit,
   query,
   QueryDocumentSnapshot,
+  serverTimestamp,
   type SnapshotOptions,
   Timestamp,
   where,
@@ -40,15 +42,24 @@ export const visitsDataConverter: FirestoreDataConverter<UserVisitDTO, UserVisit
   },
 };
 
-export const fetchPatientVisits = async (patientId: string) => {
+export const fetchPatientVisits = async ({
+  patientId,
+  searchQuery,
+}: {
+  patientId: string;
+  searchQuery: string;
+}) => {
   try {
     const db = firebaseInstance.getDb();
 
     const visitsCollections = collection(db, FIRESTORE_COLLECTIONS.VISITS);
+
     const visitsCollectionQuery = query(
       visitsCollections,
       where('patientId', '==', patientId),
+      limit(10),
     ).withConverter(visitsDataConverter);
+
     const visitSnapshots = await getDocs(visitsCollectionQuery);
 
     const visits: UserVisitDTO[] = [];
@@ -67,7 +78,73 @@ export const fetchPatientVisits = async (patientId: string) => {
       }
     });
 
-    return visits;
+    const filteredVisits = visits.filter((visit) => {
+      const searchQueryLowerCase = searchQuery.trim().toLowerCase();
+
+      return visit.reasonForVisit.toLowerCase().includes(searchQueryLowerCase);
+    });
+
+    return filteredVisits;
+  } catch (error) {
+    if (error instanceof FirestoreError) {
+      const errorMessage = getFirestoreErrorMessage(error.code);
+      throw new Error(errorMessage);
+    }
+    throw new Error('Something wrong happened could not retrive visits');
+  }
+};
+
+export const fetchPatientVisitsTEST = async ({
+  patientId,
+  searchQuery,
+}: {
+  patientId: string;
+  searchQuery: string;
+}) => {
+  try {
+    const db = firebaseInstance.getDb();
+    const visitsCollections = collection(db, FIRESTORE_COLLECTIONS.VISITS);
+
+    const queryConstraints = [where('patientId', '==', patientId)];
+
+    if (searchQuery) {
+      queryConstraints.push(
+        where('reasonForVisit', '>=', searchQuery),
+        where('reasonForVisit', '<=', searchQuery + '\uf8ff'),
+      );
+    }
+
+    const visitsCollectionQuery = query(visitsCollections, ...queryConstraints).withConverter(
+      visitsDataConverter,
+    );
+
+    const visitSnapshots = await getDocs(visitsCollectionQuery);
+
+    const visits: UserVisitDTO[] = [];
+
+    if (visitSnapshots.empty) {
+      throw new Error('Visits not found!');
+    }
+
+    visitSnapshots.forEach((doc) => {
+      if (doc.exists()) {
+        const newDoc = {
+          ...doc.data(),
+          id: doc.id,
+        };
+        visits.push(newDoc as UserVisitDTO);
+      }
+    });
+
+    const filteredVisits = visits.filter((visit) => {
+      const searchQueryLowerCase = searchQuery.trim().toLowerCase();
+
+      return visit.reasonForVisit.toLowerCase().includes(searchQueryLowerCase);
+    });
+
+    console.log('filteredVisits', filteredVisits);
+
+    return filteredVisits;
   } catch (error) {
     if (error instanceof FirestoreError) {
       const errorMessage = getFirestoreErrorMessage(error.code);
@@ -85,6 +162,8 @@ export const createNewVisit = async (data: AddVisitData, doctorId: string) => {
     await addDoc(visitCollectionRef, {
       ...data,
       doctorId,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     });
   } catch (error) {
     if (error instanceof FirestoreError) {
@@ -119,7 +198,5 @@ export const fetchVisitById = async (visitId: string) => {
     throw new Error('Something went wrong, could not fetch user with visits');
   }
 };
-
-/**
- * kliknuo je na pacijenta i otisao na screen sa svim njegovom visitima i sa nekim user detals
- */
+// where('reasonForVisit', '>=', searchQuery),
+// where('reasonForVisit', '<=', searchQuery + '\uf8ff'),

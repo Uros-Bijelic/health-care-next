@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,6 +14,7 @@ import RHFInput from '@/components/ui/rhf-inputs/rhf-input';
 import RHFTextarea from '@/components/ui/rhf-inputs/rhf-textarea';
 import { useCreateNewVisit } from '@/lib/hooks/mutations/use-create-new-visit';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -34,6 +34,7 @@ type Props = {
 };
 
 const AddVisitDialog = ({ patientId, firstName, lastName }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<AddVisitForm>({
     resolver: zodResolver(addVisitSchema),
     defaultValues: {
@@ -60,9 +61,9 @@ const AddVisitDialog = ({ patientId, firstName, lastName }: Props) => {
 
     try {
       await createNewVisitAsync(visit, {
-        onSuccess(onSuccessData) {
-          console.log('onSuccessData', onSuccessData);
+        onSuccess() {
           toast.success('You have successfully create new visit');
+          setIsOpen(false);
         },
         onError(error) {
           toast.error(error.message);
@@ -76,7 +77,7 @@ const AddVisitDialog = ({ patientId, firstName, lastName }: Props) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="h-auto">Create Visit</Button>
       </DialogTrigger>
@@ -100,11 +101,9 @@ const AddVisitDialog = ({ patientId, firstName, lastName }: Props) => {
               rows={5}
             />
             <DialogFooter>
-              <DialogClose>
-                <Button asChild type="button">
-                  Close
-                </Button>
-              </DialogClose>
+              <Button type="button" onClick={() => setIsOpen(false)}>
+                Close
+              </Button>
               <Button type="submit" disabled={!isValid || isSubmitting}>
                 Submit
               </Button>
